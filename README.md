@@ -1,1 +1,1 @@
-# bloom
+# bloom 静态资源
