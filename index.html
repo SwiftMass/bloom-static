@@ -1,0 +1,2074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Bloom · Focus Garden</title>
+<meta name="description" content="A garden grown from focus. Every session blooms into a flower that will never appear again.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz@0,6..72;1,6..72&display=swap" rel="stylesheet">
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script>
+  Babel.registerPreset('react-classic', {
+    presets: [[Babel.availablePresets['react'], { runtime: 'classic' }]]
+  });
+</script>
+<style>
+/* @@STYLE@@ */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --paper:#F7F4EF;--paper-2:#EFEAE1;--paper-3:#E7E0D4;--card:#FCFAF6;
+  --ink:#26221C;--ink-2:#6B6358;--ink-3:#A39A8C;--ink-4:#C9C0B2;
+  --line:rgba(38,34,28,.08);--line-2:rgba(38,34,28,.14);
+  --accent:#C2603F;--accent-2:#A84E30;
+  --m-rose:#C99A93;--m-clay:#C2855E;--m-gold:#C9A857;--m-sage:#8FA081;
+  --m-teal:#7E9D98;--m-sky:#8AA2B8;--m-lav:#A294B0;--m-plum:#A87E8C;
+  --dark:#17150F;--dark-2:#211E17;
+  --serif:'Fraunces',Georgia,serif;
+  --news:'Newsreader',Georgia,serif;
+  --sans:'Inter',-apple-system,system-ui,sans-serif;
+  --ease:cubic-bezier(.4,0,.15,1);--spring:cubic-bezier(.34,1.4,.5,1);
+}
+html{scroll-behavior:smooth}
+html,body{width:100%;overflow-x:hidden}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased}
+svg.ic{width:1em;height:1em;display:inline-block;vertical-align:-.13em;fill:none}
+a{color:inherit;text-decoration:none}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:var(--ink-4);border-radius:8px}
+.tap{cursor:pointer;transition:opacity .18s var(--ease),transform .18s var(--ease)}
+.tap:active{transform:scale(.97)}
+img,svg{display:block}
+
+/* ---- layout ---- */
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+section{position:relative}
+.eyebrow{font:600 11px var(--sans);letter-spacing:.24em;text-transform:uppercase;color:var(--accent)}
+.serif-hero{font:400 clamp(40px,7.2vw,84px) var(--serif);line-height:1.02;letter-spacing:-1.4px}
+.serif-xl{font:400 clamp(30px,4.2vw,46px) var(--serif);line-height:1.08;letter-spacing:-.6px}
+.serif-l{font:400 24px var(--serif);letter-spacing:-.3px}
+.serif-it{font-style:italic}
+.lead{font:400 clamp(16px,1.7vw,19px) var(--sans);color:var(--ink-2);line-height:1.68}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---- nav ---- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(247,244,239,.82);backdrop-filter:saturate(1.4) blur(18px);border-bottom:1px solid transparent;transition:border-color .3s,background .3s}
+.nav.scrolled{border-bottom-color:var(--line);background:rgba(247,244,239,.92)}
+.nav-in{max-width:1120px;margin:0 auto;padding:0 28px;height:66px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font:500 20px var(--serif);letter-spacing:-.2px}
+.brand-mark{width:30px;height:30px}
+.nav-links{display:flex;align-items:center;gap:30px}
+.nav-links a{font:500 14px var(--sans);color:var(--ink-2);transition:color .18s}
+.nav-links a:hover{color:var(--ink)}
+.nav-right{display:flex;align-items:center;gap:14px}
+.lang-wrap{position:relative}
+.lang-btn{display:inline-flex;align-items:center;gap:6px;font:600 12px var(--sans);letter-spacing:.02em;color:var(--ink-2);border:1px solid var(--line-2);border-radius:20px;padding:6px 12px;background:none;cursor:pointer;transition:.18s}
+.lang-btn:hover{border-color:var(--ink-3);color:var(--ink)}
+.lang-caret{width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid currentColor;opacity:.6;transition:transform .2s}
+.lang-caret.up{transform:rotate(180deg)}
+.lang-menu{position:absolute;top:calc(100% + 8px);right:0;min-width:132px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 18px 44px -18px rgba(20,16,30,.4);padding:5px;display:flex;flex-direction:column;gap:2px;z-index:60}
+.lang-opt{display:flex;align-items:center;justify-content:space-between;gap:10px;font:500 13px var(--sans);color:var(--ink-2);background:none;border:none;border-radius:8px;padding:8px 11px;cursor:pointer;transition:.15s;text-align:left}
+.lang-opt:hover{background:var(--paper-2);color:var(--ink)}
+.lang-opt.on{color:var(--ink);font-weight:600}
+.lang-opt.on svg{color:var(--accent)}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 14px var(--sans);border:none;border-radius:26px;padding:12px 22px;cursor:pointer;transition:.2s var(--ease);white-space:nowrap}
+.btn-accent{background:var(--accent);color:#fff}
+.btn-accent:hover{background:var(--accent-2);transform:translateY(-1px);box-shadow:0 10px 24px -10px rgba(168,78,48,.6)}
+.btn-ghost{background:none;color:var(--ink);border:1px solid var(--line-2)}
+.btn-ghost:hover{border-color:var(--ink-3)}
+.btn-sm{padding:9px 16px;font-size:13px}
+.nav-menu-btn{display:none;flex-direction:column;justify-content:center;gap:5px;width:38px;height:38px;border:1px solid var(--line-2);border-radius:11px;background:none;cursor:pointer;padding:0 9px}
+.nav-menu-btn span{display:block;height:2px;width:100%;background:var(--ink);border-radius:2px;transition:transform .28s var(--ease),opacity .2s var(--ease)}
+.nav-menu-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-menu-btn.open span:nth-child(2){opacity:0}
+.nav-menu-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.nav-drawer{position:fixed;top:66px;left:0;right:0;background:rgba(247,244,239,.98);backdrop-filter:saturate(1.4) blur(18px);border-bottom:1px solid var(--line);display:flex;flex-direction:column;padding:8px 0;transform:translateY(-12px);opacity:0;pointer-events:none;transition:transform .3s var(--ease),opacity .3s var(--ease);max-height:calc(100vh - 66px);overflow-y:auto}
+.nav-drawer.open{transform:none;opacity:1;pointer-events:auto}
+.nav-drawer a{font:500 16px var(--sans);color:var(--ink);padding:15px 28px;border-bottom:1px solid var(--line)}
+.nav-drawer a:last-child{border-bottom:none}
+.nav-drawer-dl{margin:16px 28px 12px;justify-content:center;color:#fff!important;padding:14px 22px!important;border-bottom:none!important}
+
+/* ---- hero ---- */
+.hero{padding:150px 0 90px;position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center}
+.hero h1{margin:18px 0 22px}
+.hero .lead{max-width:440px}
+.hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;align-items:center}
+.hero-note{font:400 13px var(--sans);color:var(--ink-3);margin-top:16px;display:flex;align-items:center;gap:7px}
+.hero-stage{position:relative;aspect-ratio:1/1;border-radius:28px;background:radial-gradient(120% 100% at 50% 8%,#211E29,#161420 55%,#0E0D12);display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 40px 90px -40px rgba(20,16,30,.7),inset 0 1px 0 rgba(255,255,255,.05)}
+.hero-stage .stars{position:absolute;inset:0;pointer-events:none}
+.hero-stage .star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;animation:twinkle 4s ease-in-out infinite}
+.hero-caption{position:absolute;bottom:22px;left:0;right:0;text-align:center;color:rgba(236,230,220,.62);font:400 13px var(--news);font-style:italic;padding:0 30px;line-height:1.5}
+.floor{position:absolute;left:-4%;right:-4%;bottom:0;height:34%;background:radial-gradient(60% 100% at 50% 100%,rgba(143,160,129,.20),transparent 72%)}
+
+/* ---- generic section ---- */
+.sec{padding:96px 0}
+.sec-head{max-width:640px;margin-bottom:52px}
+.sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
+.sec-head h2{margin:14px 0 16px}
+
+/* ---- product tour (flat grid) ---- */
+.tour-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(28px,4vw,56px) clamp(24px,3vw,44px);max-width:1080px;margin:0 auto}
+.tour-cell{display:flex;flex-direction:column;align-items:center;text-align:center}
+.tour-phone{position:relative;width:100%;max-width:270px;aspect-ratio:393/852;margin:0 auto;border-radius:38px;overflow:hidden;background:var(--paper);box-shadow:0 34px 70px -38px rgba(20,16,30,.5),0 0 0 1px var(--line);transition:transform .4s var(--spring),box-shadow .4s var(--ease)}
+.tour-phone.dark{background:#0E0D12}
+.tour-cell:hover .tour-phone{transform:translateY(-6px);box-shadow:0 46px 88px -40px rgba(20,16,30,.58),0 0 0 1px var(--line)}
+.tour-shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* animated in-phone demo — mirrors the app's real focus / mindful / sleep screens */
+.tdemo{position:absolute;inset:0;display:flex;flex-direction:column;background:#F7F4EF;color:var(--ink);transition:opacity .3s linear;font-size:calc(0.9px + 1.1vw);container-type:inline-size}
+.tdemo.dark{background:radial-gradient(120% 90% at 50% 6%,#211E29,#15131A 60%,#0E0D12);color:#EDE8DD}
+.tdemo-bar{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:4.5% 7% 0;font:600 3.4cqw var(--sans);color:var(--ink-2)}
+.tdemo.dark .tdemo-bar{color:rgba(237,232,221,.7)}
+.tdemo-notch{width:32%;height:4.2cqw;border-radius:3cqw;background:#111;opacity:.92}
+.tdemo.dark .tdemo-notch{background:#000}
+.tdemo-sig{width:8cqw;height:3cqw;border-radius:1px;background:currentColor;opacity:.5}
+.tdemo-stack{position:relative;flex:1;min-height:0}
+.tdemo-layer{position:absolute;inset:0;display:flex;flex-direction:column}
+.tdemo-scroll{flex:1;overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:3% 7% 0}
+.tdemo-tabbar{flex-shrink:0;display:flex;justify-content:space-around;padding:3% 4% 4%;border-top:1px solid var(--line);font:600 2.9cqw var(--sans);color:var(--ink-4)}
+.tdemo.dark .tdemo-tabbar{border-color:rgba(237,232,221,.1);color:rgba(237,232,221,.4)}
+.tdemo-tabbar .on{color:var(--accent)}
+.tdemo.dark .tdemo-tabbar .on{color:#C9A857}
+/* head row: eyebrow + serif title + coin pill */
+.tdemo-head{width:100%;display:flex;align-items:flex-start;justify-content:space-between;margin-top:1%}
+.tdemo-eyebrow{font:600 2.9cqw var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+.tdemo.dark .tdemo-eyebrow{color:rgba(237,232,221,.55)}
+.tdemo-title{font:400 6.4cqw var(--serif);line-height:1.05;letter-spacing:-.3px;margin-top:2%}
+.tdemo-title i{font-family:var(--news);font-style:italic}
+.tdemo-coinpill{display:inline-flex;align-items:center;gap:5px;padding:2% 3.5%;border-radius:20px;border:1px solid var(--line-2);font:700 3.4cqw var(--sans)}
+.tdemo.dark .tdemo-coinpill{border-color:rgba(237,232,221,.2)}
+.tdemo-coindot{width:3.6cqw;height:3.6cqw;border-radius:50%;background:radial-gradient(circle at 38% 32%,#FBE7A6,#E7C66B 62%,#C99B3A);flex-shrink:0}
+/* segmented mode toggle */
+.tdemo-seg{width:100%;display:flex;gap:1.5%;padding:1.4%;background:var(--paper-2);border-radius:12px;margin-top:4%}
+.tdemo-seg span{flex:1;text-align:center;padding:2.6% 0;border-radius:9px;font:600 3.3cqw var(--sans);color:var(--ink-3)}
+.tdemo-seg .on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.tdemo-mtitle{width:100%;margin-top:4%;font:400 5cqw var(--serif);color:var(--ink)}
+.tdemo-mtitle span{display:block;font:400 3cqw var(--sans);color:var(--ink-2);margin-top:1.5%;line-height:1.4}
+/* dial + center readout */
+.tdemo-dialwrap{position:relative;width:80%;aspect-ratio:1;margin:2% 0 0}
+.tdemo-dialwrap.sleep{width:70%}
+.tdemo-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.tdemo-flower{display:flex;align-items:flex-end;justify-content:center;height:44%}
+.tdemo-taplabel{margin-top:2%;font:600 2.6cqw var(--sans);letter-spacing:.05em;color:var(--ink-3);text-transform:uppercase}
+.tdemo.dark .tdemo-taplabel{color:#D9CFE8}
+.tdemo-num{font:500 8.5cqw var(--serif);line-height:1;margin-top:3%}
+.tdemo-hint{font:400 2.7cqw var(--sans);color:var(--ink-3);margin-top:1%}
+.tdemo.dark .tdemo-hint{color:rgba(237,232,221,.5)}
+/* coin preview row */
+.tdemo-coinrow{display:flex;align-items:center;gap:6px;margin-top:3.5%;font:700 3.3cqw var(--sans);color:var(--m-gold)}
+.tdemo-coinrow em{font-style:normal;font-weight:500;color:var(--ink-3)}
+.tdemo.dark .tdemo-coinrow em{color:rgba(237,232,221,.5)}
+/* intention / ambient chips */
+.tdemo-lbl{width:100%;font:600 2.9cqw var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);margin-top:4%}
+.tdemo-lbl em{font-style:normal;letter-spacing:0;text-transform:none;color:var(--ink-4)}
+.tdemo-chips{width:100%;display:flex;flex-wrap:wrap;gap:2%;margin-top:2%}
+.tdemo-chips span{font:600 3cqw var(--sans);padding:1.8% 3.4%;border-radius:16px;border:1px solid var(--line-2);color:var(--ink-2)}
+.tdemo-chips span.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tdemo-chips span.dash{border-style:dashed;color:var(--ink-3)}
+/* begin button */
+.tdemo-begin{width:100%;margin-top:5%;padding:3.6% 0;border-radius:14px;text-align:center;background:var(--ink);color:#fff;font:600 3.6cqw var(--sans)}
+.tdemo-begin.sleep{background:#EDE8DD;color:#211d2e}
+/* sleep specifics */
+.tdemo-sleephead{width:100%;text-align:left;margin-top:1%}
+.tdemo-sleepnote{width:100%;text-align:center;font:400 2.9cqw var(--sans);color:rgba(237,232,221,.6);margin:3% 0 1%}
+.tdemo-sleeptime{font:400 6cqw var(--serif);color:#F2EEE6;margin-top:2%;text-align:center}
+.tdemo-sleeptime span{font-size:3.4cqw;color:rgba(237,232,221,.5)}
+.tdemo-zone{font:600 3cqw var(--sans);letter-spacing:.04em;margin-top:1.5%;text-align:center}
+/* ── running screen (dark session) ── */
+.tdemo-runscreen{position:absolute;inset:0;display:flex;flex-direction:column;color:#EDE8DD;background:radial-gradient(120% 90% at 50% 0%,#211E29,#15131A 60%,#0E0D12)}
+.tdemo-runtop{display:flex;align-items:center;justify-content:space-between;padding:5% 7% 0}
+.tdemo-x{font:400 5cqw var(--sans);opacity:.6}
+.tdemo-runtask{font:600 3cqw var(--sans);letter-spacing:.15em;text-transform:uppercase;opacity:.7}
+.tdemo-runmid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 8%}
+.tdemo-runring{position:relative;width:78%;aspect-ratio:1;display:flex;align-items:center;justify-content:center}
+.tdemo-runflower{filter:drop-shadow(0 6px 18px rgba(0,0,0,.4));display:flex;align-items:flex-end;justify-content:center}
+.tdemo-runclock{font:400 12cqw var(--serif);letter-spacing:1px;margin-top:4%}
+.tdemo-runstage{font:400 2.8cqw var(--sans);color:rgba(237,232,221,.55);margin-top:1.5%}
+.tdemo-runtally{display:flex;align-items:center;gap:5px;font:700 3.2cqw var(--sans);color:#E7C66B;margin-top:2.5%}
+.tdemo-runline{max-width:70%;text-align:center;font:400 3cqw var(--news);font-style:italic;color:rgba(237,232,221,.6);line-height:1.5;margin-top:3.5%}
+.tdemo-runctrl{display:flex;justify-content:center;gap:5%;padding:0 0 8%}
+.tdemo-runbtn{width:12cqw;height:12cqw;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#EDE8DD;color:#15131A;font-size:4cqw}
+.tdemo-runbtn.ghost{background:transparent;border:1px solid rgba(237,232,221,.22);color:#EDE8DD}
+/* ── bloom result (light celebration) ── */
+.tdemo-bloomscreen{display:flex;flex-direction:column;align-items:center;text-align:center;width:100%;padding:6% 7% 0}
+.tdemo-bloomeyebrow{font:600 3.4cqw var(--sans);letter-spacing:.14em;margin-top:3%}
+.tdemo-bloomflower{height:34%;display:flex;align-items:flex-end;justify-content:center;margin-top:3%;transition:none}
+.tdemo-bloomtitle{font:400 7cqw var(--serif);margin-top:3%}
+.tdemo-bloomdesc{font:400 3cqw var(--sans);color:var(--ink-2);line-height:1.5;margin-top:2.5%;max-width:88%}
+.tdemo-bloomstats{display:flex;width:100%;border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-top:5%}
+.tdemo-stat{flex:1;padding:3.5% 1%;border-left:1px solid var(--line)}
+.tdemo-stat:first-child{border-left:none}
+.tdemo-stat b{display:block;font:500 4.4cqw var(--serif)}
+.tdemo-stat span{display:block;font:500 2.5cqw var(--sans);color:var(--ink-3);margin-top:3%;letter-spacing:.02em}
+.tour-cell-copy{margin-top:24px;max-width:300px}
+.tour-cell-t{font:400 clamp(20px,2.2vw,24px) var(--serif);letter-spacing:-.2px;color:var(--ink)}
+.tour-cell-d{font:400 15px var(--sans);color:var(--ink-2);line-height:1.6;margin-top:9px}
+
+/* ---- mechanic (留下才开花) ---- */
+.mech{background:var(--dark);color:#EDE7DB;border-radius:0;overflow:hidden}
+.mech .eyebrow{color:var(--m-gold)}
+.mech-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.mech h2{font:400 clamp(30px,4.2vw,46px) var(--serif);line-height:1.1;letter-spacing:-.6px;color:#F4EEE2;margin-bottom:18px}
+.mech p{color:rgba(237,231,219,.66);font-size:16px;line-height:1.72;max-width:430px}
+.mech-demo{position:relative;aspect-ratio:4/3;border-radius:22px;background:radial-gradient(120% 100% at 50% 0%,#252030,#17141F 60%,#0F0D14);display:flex;align-items:center;justify-content:center;gap:30px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.mech-col{display:flex;flex-direction:column;align-items:center;gap:14px}
+.mech-tag{font:600 11px var(--sans);letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;border-radius:20px}
+.mech-tag.stay{color:#B8C9A6;background:rgba(143,160,129,.16)}
+.mech-tag.leave{color:#D9A8A0;background:rgba(190,110,95,.16)}
+
+/* ---- feature rows ---- */
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;padding:60px 0}
+.frow:nth-child(even) .frow-media{order:-1}
+.frow h3{font:400 clamp(26px,3.4vw,36px) var(--serif);line-height:1.12;letter-spacing:-.4px;margin:12px 0 14px}
+.frow p{color:var(--ink-2);font-size:16px;line-height:1.7;max-width:420px}
+.intent-list{display:flex;flex-direction:column;gap:2px;margin-top:24px}
+.intent-item{display:flex;align-items:center;gap:16px;padding:13px 16px;border-radius:14px;transition:background .2s;cursor:default}
+.intent-item:hover{background:var(--paper-2)}
+.intent-item .nm{font:500 15px var(--sans);color:var(--ink)}
+.intent-item .sp{font:400 14px var(--news);font-style:italic;color:var(--ink-3);margin-left:auto}
+.media-card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:34px;box-shadow:0 30px 60px -40px rgba(60,50,35,.4)}
+/* coin economy: earn list + spend flow card */
+.econ-earn{margin-top:26px}
+.econ-lbl{font:600 11px var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}
+.econ-erow{display:flex;align-items:center;gap:14px;padding:12px 4px;border-bottom:1px solid var(--line)}
+.econ-erow:last-child{border-bottom:none}
+.econ-eic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.econ-etxt{display:flex;flex-direction:column;flex:1}
+.econ-etxt b{font:600 15px var(--sans);color:var(--ink)}
+.econ-etxt em{font-style:normal;font-size:13px;color:var(--ink-3);margin-top:2px}
+.econ-ecoin{display:inline-flex;align-items:center;gap:6px;font:700 15px var(--sans);color:var(--m-gold)}
+.econ-coin,.econ-hubcoin{border-radius:50%;background:radial-gradient(circle at 38% 32%,#FBE7A6,#E7C66B 62%,#C99B3A);box-shadow:inset 0 -2px 0 rgba(0,0,0,.12)}
+.econ-coin{width:15px;height:15px}
+.econ-card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:0 30px 60px -40px rgba(60,50,35,.4)}
+.econ-hub{display:flex;flex-direction:column;align-items:center;gap:8px;padding:8px 0 20px;position:relative}
+.econ-hubcoin{width:52px;height:52px}
+.econ-hubn{font:700 14px var(--sans);letter-spacing:.04em;color:var(--ink)}
+.econ-hub::after{content:'';position:absolute;bottom:0;left:50%;width:1px;height:14px;background:var(--line-2)}
+.econ-spend{display:flex;flex-direction:column;gap:8px}
+.econ-srow{display:flex;align-items:center;gap:13px;padding:11px 14px;border:1px solid var(--line);border-radius:14px;background:var(--paper-2);transition:transform .18s,box-shadow .18s}
+.econ-srow:hover{transform:translateY(-2px);box-shadow:0 10px 24px -16px rgba(60,50,35,.5)}
+.econ-sic{width:42px;height:42px;border-radius:11px;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--ink-2);flex-shrink:0;overflow:hidden}
+.econ-sic.gacha{background:rgba(194,96,63,.15);border-color:rgba(194,96,63,.4);color:var(--accent)}
+.econ-stxt{display:flex;flex-direction:column;flex:1}
+.econ-stxt b{font:600 14px var(--sans);color:var(--ink)}
+.econ-stxt em{font-style:normal;font-size:12.5px;color:var(--ink-3);margin-top:2px}
+.econ-sarrow{color:var(--ink-4)}
+.bloom-row{display:flex;justify-content:center;align-items:flex-end;gap:6px;flex-wrap:wrap}
+
+/* ---- garden grid ---- */
+.garden-scene{background:linear-gradient(180deg,var(--paper-2),var(--paper-3));border:1px solid var(--line);border-radius:26px;padding:40px 30px 30px;position:relative;overflow:hidden}
+.garden-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px;position:relative;z-index:2}
+.plot{aspect-ratio:1/1;border-radius:16px;background:rgba(255,255,255,.34);border:1px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;transition:transform .3s var(--spring)}
+.plot:hover{transform:translateY(-4px)}
+.plot.empty{background:rgba(58,48,36,.05);border:1px dashed var(--line-2)}
+
+/* ---- codex gallery ---- */
+.codex-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:38px}
+.codex-tab{font:600 13px var(--sans);padding:9px 18px;border-radius:22px;border:1px solid var(--line-2);background:none;color:var(--ink-2);cursor:pointer;transition:.18s}
+.codex-tab.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.codex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:14px}
+.codex-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 12px 14px;text-align:center;transition:transform .28s var(--spring),box-shadow .28s;position:relative}
+.codex-card:hover{transform:translateY(-5px);box-shadow:0 22px 40px -26px rgba(60,50,35,.5)}
+.codex-card .nm{font:500 14px var(--sans);color:var(--ink);margin-top:8px}
+.codex-card .tier{font:600 9.5px var(--sans);letter-spacing:.1em;text-transform:uppercase;margin-top:3px}
+.codex-flowerbox{height:96px;display:flex;align-items:flex-end;justify-content:center}
+
+/* ---- together ---- */
+.together{background:radial-gradient(120% 90% at 80% 0%,#232E2B,#18201D 60%,#111613);color:#E6EDE7;border-radius:26px;padding:56px 48px;overflow:hidden;position:relative}
+.together .eyebrow{color:#9DBFA6}
+.together h2{font:400 clamp(28px,3.8vw,42px) var(--serif);line-height:1.12;color:#EFF4EE;margin:14px 0 16px}
+.together p{color:rgba(230,237,231,.68);font-size:16px;line-height:1.7;max-width:460px}
+.board{margin-top:8px;display:flex;flex-direction:column;gap:10px}
+.board-row{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:13px 18px}
+.board-rank{font:600 14px var(--sans);color:#9DBFA6;width:20px}
+.board-name{font:500 15px var(--sans);color:#EFF4EE}
+.board-hrs{margin-left:auto;font:600 15px var(--sans);color:#CBD9C8;font-variant-numeric:tabular-nums}
+.together-goal{margin-top:22px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px}
+.goal-bar{height:8px;border-radius:8px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:12px}
+.goal-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--m-sage),#B8C9A6)}
+
+/* ---- milestones ---- */
+.mile-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.mile-card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px;display:flex;gap:16px;align-items:flex-start}
+.mile-ic{width:48px;height:48px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mile-ic svg{width:100%;height:100%;overflow:visible}
+.mile-card h4{font:500 16px var(--sans);margin-bottom:5px}
+.mile-card p{font-size:13.5px;color:var(--ink-2);line-height:1.5}
+.mile-reward{display:inline-flex;align-items:center;gap:6px;margin-top:9px;font:600 11px var(--sans);letter-spacing:.05em;color:var(--m-gold)}
+
+/* ---- CTA / subscribe ---- */
+.cta{text-align:center;padding:108px 0}
+.cta h2{font:400 clamp(32px,5vw,56px) var(--serif);line-height:1.06;letter-spacing:-1px;margin-bottom:20px}
+.cta .lead{max-width:520px;margin:0 auto 34px}
+.sub-form{display:flex;gap:10px;max-width:440px;margin:0 auto;flex-wrap:wrap;justify-content:center}
+.sub-form input{flex:1;min-width:220px;font:400 15px var(--sans);padding:14px 18px;border-radius:26px;border:1px solid var(--line-2);background:var(--card);color:var(--ink);outline:none;transition:border-color .2s}
+.sub-form input:focus{border-color:var(--accent)}
+.sub-ok{font:500 15px var(--sans);color:var(--m-sage);margin-top:6px}
+.store-badges{display:flex;gap:14px;justify-content:center;margin-top:30px;flex-wrap:wrap}
+.store-badge{display:flex;align-items:center;gap:11px;background:var(--ink);color:var(--paper);border-radius:14px;padding:11px 18px;opacity:.9}
+.store-badge .sb-sub{font:400 10px var(--sans);opacity:.7;letter-spacing:.02em}
+.store-badge .sb-main{font:600 15px var(--sans);letter-spacing:.01em}
+.store-badge.soon{background:var(--paper-2);color:var(--ink-3);cursor:default}
+
+/* ---- footer ---- */
+footer{border-top:1px solid var(--line);padding:56px 0 40px;background:var(--paper)}
+.foot-grid{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;margin-bottom:40px}
+.foot-brand{max-width:260px}
+.foot-brand p{font:400 14px var(--news);font-style:italic;color:var(--ink-3);margin-top:12px;line-height:1.6}
+.foot-cols{display:flex;gap:60px;flex-wrap:wrap}
+.foot-col h5{font:600 11px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+.foot-col a{display:block;font:400 14px var(--sans);color:var(--ink-2);margin-bottom:10px;transition:color .18s}
+.foot-col a:hover{color:var(--ink)}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid var(--line);font:400 13px var(--sans);color:var(--ink-3);flex-wrap:wrap;gap:12px}
+
+/* ---- reveal anim ---- */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---- fx (flower engine dazzle) ---- */
+@keyframes sway{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+@keyframes spin-slow{to{transform:rotate(360deg)}}
+@keyframes fade-up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes drift{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes twinkle{0%,100%{opacity:.25}50%{opacity:.9}}
+/* flower effects — gated by rarity so dazzle is an earned reward, never default */
+@keyframes shimmer-sweep{0%{transform:translateX(-130%) skewX(-18deg)}100%{transform:translateX(260%) skewX(-18deg)}}
+@keyframes hue-flow{0%{filter:hue-rotate(0deg) saturate(1.1)}50%{filter:hue-rotate(48deg) saturate(1.35)}100%{filter:hue-rotate(0deg) saturate(1.1)}}
+@keyframes breathe-bloom{0%,100%{transform:scale(.975)}50%{transform:scale(1.04)}}
+@keyframes halo-pulse{0%,100%{opacity:.5;transform:scale(.9)}50%{opacity:.95;transform:scale(1.14)}}
+@keyframes mote-float{0%{transform:translateY(6px) scale(.6);opacity:0}22%{opacity:1}100%{transform:translateY(-30px) scale(1.1);opacity:0}}
+.fx{position:relative;display:inline-flex}
+.fx-shimmer::after{content:"";position:absolute;left:6%;top:4%;width:22%;height:70%;border-radius:50%;background:linear-gradient(90deg,transparent,rgba(255,255,250,.98),transparent);filter:blur(1.5px);animation:shimmer-sweep 3.4s var(--ease) infinite;animation-delay:.8s;pointer-events:none;mix-blend-mode:screen}
+.fx-iris{animation:hue-flow 5.5s ease-in-out infinite}
+.fx-breathe{animation:breathe-bloom 5.5s ease-in-out infinite;transform-origin:center 78%}
+.fx-halo{position:absolute;inset:0;margin:auto;border-radius:50%;pointer-events:none;animation:halo-pulse 4s ease-in-out infinite;filter:blur(1px)}
+.fx-mote{position:absolute;border-radius:50%;pointer-events:none;animation:mote-float linear infinite}
+/* bespoke signature effects — lore-driven, reserved for landmark blooms (#flower-signature-fx) */
+/* 彼岸花 lycoris: 黄泉之花 — a slow spectral red underglow that pulses like a heartbeat in the dark, + petals that drift up like departing souls */
+@keyframes spectral-pulse{0%,100%{opacity:.32;transform:scale(.92)}50%{opacity:.78;transform:scale(1.12)}}
+@keyframes soul-drift{0%{transform:translate(0,4px) scale(.5);opacity:0}20%{opacity:.9}100%{transform:translate(var(--sx,8px),-34px) scale(1.05);opacity:0}}
+.fx-spectral{position:absolute;inset:0;margin:auto;border-radius:50%;pointer-events:none;filter:blur(3px);animation:spectral-pulse 3.8s ease-in-out infinite;mix-blend-mode:screen}
+.fx-soul{position:absolute;border-radius:50% 50% 50% 0;pointer-events:none;animation:soul-drift ease-in infinite;transform-origin:center}
+/* aurora 极光花: a slow shifting iridescent curtain sweeping behind the bloom */
+@keyframes aurora-wave{0%,100%{opacity:.4;transform:translateX(-8%) scaleY(.92)}50%{opacity:.85;transform:translateX(8%) scaleY(1.08)}}
+.fx-aurora{position:absolute;inset:-6% -2%;pointer-events:none;border-radius:50%;filter:blur(7px);animation:aurora-wave 4.6s ease-in-out infinite;mix-blend-mode:screen}
+/* nightqueen 昙花 / ghostpipe 水晶兰: a cool moon-pale bloom-glow that swells once like a held breath */
+@keyframes lumen-breathe{0%,100%{opacity:.35;transform:scale(.9)}50%{opacity:.9;transform:scale(1.16)}}
+.fx-lumen{position:absolute;inset:0;margin:auto;border-radius:50%;pointer-events:none;filter:blur(4px);animation:lumen-breathe 5s ease-in-out infinite;mix-blend-mode:screen}
+/* firelily 火百合: embers rising + a hot flicker */
+@keyframes ember-rise{0%{transform:translate(0,2px) scale(.7);opacity:0}25%{opacity:1}100%{transform:translate(var(--ex,4px),-30px) scale(.3);opacity:0}}
+@keyframes flame-flicker{0%,100%{opacity:.45;transform:scale(.95)}40%{opacity:.85;transform:scale(1.1)}70%{opacity:.6;transform:scale(1.02)}}
+.fx-flame{position:absolute;inset:4%;margin:auto;border-radius:50%;pointer-events:none;filter:blur(5px);animation:flame-flicker 1.9s ease-in-out infinite;mix-blend-mode:screen}
+.fx-ember{position:absolute;border-radius:50%;pointer-events:none;animation:ember-rise ease-in infinite}
+/* snowlotus 雪莲: drifting frost crystals + a cold pale shimmer */
+@keyframes frost-fall{0%{transform:translate(0,-6px) rotate(0deg);opacity:0}20%{opacity:.9}100%{transform:translate(var(--fx,3px),26px) rotate(160deg);opacity:0}}
+.fx-frost{position:absolute;pointer-events:none;animation:frost-fall linear infinite;color:#EAF2FF}
+/* bluerose 蓝玫瑰: a mystic deep-blue sheen rotating slowly */
+@keyframes mystic-spin{to{transform:rotate(360deg)}}
+.fx-mystic{position:absolute;inset:-4%;margin:auto;border-radius:50%;pointer-events:none;filter:blur(6px);animation:mystic-spin 9s linear infinite;mix-blend-mode:screen}
+
+/* ---- responsive ---- */
+/* tablet / small laptop */
+@media(max-width:980px){
+  .hero-grid{grid-template-columns:1fr;gap:40px;text-align:center}
+  .hero .lead{margin-left:auto;margin-right:auto}
+  .hero-cta{justify-content:center}
+  .hero-note{justify-content:center}
+  .hero-stage{max-width:420px;margin:0 auto;width:100%}
+  .tour-grid{grid-template-columns:repeat(2,1fr);gap:40px 32px;max-width:640px}
+}
+/* mobile: single column, hamburger nav */
+@media(max-width:880px){
+  .mech-grid,.frow,.together-inner{grid-template-columns:1fr!important;gap:34px}
+  .frow:nth-child(even) .frow-media{order:0}
+  .nav-links{display:none}
+  .nav-dl{display:none}
+  .nav-menu-btn{display:flex}
+  .together{padding:40px 26px}
+  .sec{padding:70px 0}
+  .hero{padding:120px 0 60px}
+  .mech-demo{aspect-ratio:auto;padding:40px 20px;gap:20px}
+  .foot-grid{flex-direction:column;gap:32px}
+  .foot-cols{gap:40px}
+}
+/* phone */
+@media(max-width:560px){
+  .wrap{padding:0 20px}.nav-in{padding:0 20px}
+  .hero-cta{flex-direction:column;align-items:stretch}
+  .hero-cta .btn{justify-content:center}
+  .sec{padding:56px 0}
+  .sec-head{margin-bottom:38px}
+  .serif-hero{font-size:clamp(38px,11vw,56px)}
+  .codex-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
+  .codex-card{padding:14px 8px 12px}
+  .garden-grid{grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px}
+  .garden-scene{padding:28px 18px 20px}
+  .mile-grid{grid-template-columns:1fr}
+  .together{padding:34px 22px;border-radius:20px}
+  .board-row{padding:11px 14px;gap:11px}
+  .sub-form input{min-width:0;width:100%}
+  .sub-form .btn{width:100%;justify-content:center}
+  .tour-grid{grid-template-columns:1fr;gap:36px;max-width:300px}
+  .tour-phone{max-width:250px}
+  .foot-cols{gap:32px}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react-classic">
+/* ============================================================
+   Bloom · 官方网站
+   花朵引擎(下方 FLOWER ENGINE 段)整段移植自产品原型
+   bloom-garden-pro.html —— 官网里开的是 App 同款的真花。
+   ============================================================ */
+let LANG='zh';  // 花朵引擎读取的全局语言标记
+window.__engineReady=false;
+/* ===== FLOWER ENGINE (ported verbatim from bloom-garden-pro.html) ===== */
+function rng(seed){let s=seed>>>0||1;return()=>{s^=s<<13;s^=s>>>17;s^=s<<5;return((s>>>0)/4294967296);};}
+const PAL={
+  dawn:['#E2A98F','#D98C6A','#C9A857','#E8C49B'],      // 5-9h warm
+  day:['#8FA081','#7E9D98','#A8B58C','#C9B36A'],         // 9-17h green/gold
+  dusk:['#C2855E','#A87E8C','#C99A93','#B5896B'],        // 17-21h clay/rose
+  night:['#8AA2B8','#A294B0','#7E8FA8','#9A8FB0'],       // 21-5h cool
+};
+function band(hour){return hour<5?'night':hour<9?'dawn':hour<17?'day':hour<21?'dusk':'night';}
+function mix(a,b,t){const p=h=>{h=h.length===4?'#'+h[1]+h[1]+h[2]+h[2]+h[3]+h[3]:h;return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];};const x=p(a),y=p(b);return '#'+x.map((v,i)=>Math.round(v+(y[i]-v)*t).toString(16).padStart(2,'0')).join('');}
+function colDist(a,b){const p=h=>{h=h.length===4?'#'+h[1]+h[1]+h[2]+h[2]+h[3]+h[3]:h;return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];};const x=p(a),y=p(b);return Math.abs(x[0]-y[0])+Math.abs(x[1]-y[1])+Math.abs(x[2]-y[2]);}
+// shade(): darken toward a warm shadow tone — used for petal-base gradients so petals read 3-D, not flat
+function shade(c,t){return mix(c,'#5B4A3A',t);}
+// hex<->hsl + vivid(): lift saturation (and gently lightness) so blooms read juicier without leaving
+// the morandi/paper palette — petals get richer pigment while keeping the earthy hue.
+function hex2hsl(h){h=h.length===4?'#'+h[1]+h[1]+h[2]+h[2]+h[3]+h[3]:h;let r=parseInt(h.slice(1,3),16)/255,g=parseInt(h.slice(3,5),16)/255,b=parseInt(h.slice(5,7),16)/255;const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2;let s=0,hh=0;if(mx!==mn){const d=mx-mn;s=l>0.5?d/(2-mx-mn):d/(mx+mn);hh=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;hh*=60;}return[hh,s,l];}
+function hsl2hex(hh,s,l){const c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((hh/60)%2-1)),m=l-c/2;let r,g,b;hh=(hh%360+360)%360;if(hh<60)[r,g,b]=[c,x,0];else if(hh<120)[r,g,b]=[x,c,0];else if(hh<180)[r,g,b]=[0,c,x];else if(hh<240)[r,g,b]=[0,x,c];else if(hh<300)[r,g,b]=[x,0,c];else[r,g,b]=[c,0,x];return '#'+[r,g,b].map(v=>Math.round((v+m)*255).toString(16).padStart(2,'0')).join('');}
+// relative luminance (0 dark → 1 white). Used to detect pale blooms that would melt into a light/white
+// background and need a separating contour (#pale-contour).
+function lum(hex){hex=hex.length===4?'#'+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3]:hex;const r=parseInt(hex.slice(1,3),16)/255,g=parseInt(hex.slice(3,5),16)/255,b=parseInt(hex.slice(5,7),16)/255;return 0.299*r+0.587*g+0.114*b;}
+// a bloom reads as "pale" (risks vanishing on cream/white) when its dominant signature color c1 is very
+// light. c1 is deterministic per species (= SP_TINT[0] when tinted), so the contour is stable across seeds;
+// c2 is palette-mixed and unreliable to test. Such blooms get a soft contour ring everywhere they render.
+function isPaleBloom(d){return lum(d.c1)>0.80;}
+function vivid(hex,sBoost,lBoost){const[h,s,l]=hex2hsl(hex);
+  // multiplicative + small absolute floor: morandi hues are near-gray, so a pure multiplier barely moves
+  // them. The +0.10*sBoost term guarantees a visible pigment lift; cap 0.88 lets rare/legendary read vivid.
+  const ns=Math.min(0.88,s*(1+(sBoost||0))+0.12*(sBoost||0));
+  return hsl2hex(h,ns,Math.max(0,Math.min(1,l+(lBoost||0))));}
+// bouquetGrow(): dial/preview openness as a function of session minutes. Floored at 0.62 so even a
+// 5-min pick shows a clearly-open, inviting bloom; eases up to a full 1.0 at long sessions. This is a
+// PREVIEW of "how lush this session's flower will be", not the in-session growth animation.
+function bouquetGrow(min){const t=Math.max(0,Math.min(1,(min-5)/(120-5)));return 0.62+0.38*Math.pow(t,0.72);}
+/* ===== gradient registry =====
+   Petals were flat single-fill paths (looked like cut paper). gref() registers a per-petal
+   linear gradient (dark base -> color -> light tip) and returns a url(#id); because petals are
+   drawn tip-up in local space then rotated, objectBoundingBox gradients rotate with each petal,
+   giving every petal proper base→tip shading for free. cref() does the same with a radial gradient
+   for domed flower centers. IDs are globally unique (_uid) so dozens of flowers on one page never collide. */
+let _uid=0;          // monotonic per-render id base — guarantees gradient ids are unique across the whole document
+let _grads=null;     // active registry during a flowerSVG render; null outside (helpers fall back to flat hex)
+// rarity-tiered pigment: rarer blooms earn a richer, more saturated petal — dazzle scales with achievement
+const SAT_TIER={common:0.12,uncommon:0.34,rare:0.62,epic:0.82,legendary:1.0};
+function gref(hex){
+  if(!_grads)return hex;
+  if(_grads.map[hex])return _grads.map[hex];
+  const id=`g${_grads.U}_${_grads.seq++}`;
+  const sb=0.42+(_grads.sat||0);   // base body boost + rarity tier
+  // richer pigment: saturate the body, deepen the base, keep a luminous tip — 4 stops give petals depth
+  const v=vivid(hex,sb,0),deep=vivid(shade(hex,.34),sb*0.7,-0.02),tip=mix(vivid(hex,sb*0.6,0),'#FFFDF7',.38);
+  _grads.defs+=`<linearGradient id="${id}" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="${deep}"/><stop offset=".4" stop-color="${v}"/><stop offset=".78" stop-color="${mix(v,tip,.5)}"/><stop offset="1" stop-color="${tip}"/></linearGradient>`;
+  return (_grads.map[hex]=`url(#${id})`);
+}
+function cref(hex){
+  if(!_grads)return hex;
+  const id=`c${_grads.U}_${_grads.seq++}`;
+  const v=vivid(hex,0.38+(_grads.sat||0),0);
+  _grads.defs+=`<radialGradient id="${id}" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="${mix(v,'#fff',.5)}"/><stop offset=".6" stop-color="${v}"/><stop offset="1" stop-color="${shade(v,.3)}"/></radialGradient>`;
+  return `url(#${id})`;
+}
+
+/* species drive SILHOUETTE (the big visual differentiator).
+   Assigned by task intention so different focus → visibly different flower. */
+const SPECIES={
+  '深度工作':'poppy','阅读':'bellflower','写作':'tulip','学习':'daisy',
+  '设计':'poppy','杂务':'clover','练习':'bellflower'};
+const SP_LABEL_ZH={lotus:'莲花',bellflower:'风铃草',tulip:'郁金香',daisy:'雏菊',poppy:'罂粟',clover:'三叶草',lavender:'薰衣草',rose:'玫瑰',orchid:'兰花',moonflower:'月光花',breath:'静心花',
+  sunflower:'向日葵',dahlia:'大丽花',camellia:'山茶',iris:'鸢尾',
+  peony:'牡丹',hibiscus:'扶桑',marigold:'万寿菊',anemone:'银莲花',firelily:'火百合',aurora:'极光花',protea:'帝王花',
+  strelitzia:'鹤望兰',gentian:'龙胆',snowlotus:'雪莲',victoria:'王莲',lycoris:'彼岸花',bluerose:'蓝玫瑰',crownimperial:'帝王贝母',
+  magnolia:'玉兰',ranunculus:'花毛茛',gardenia:'栀子',freesia:'小苍兰',zinnia:'百日菊',cosmos:'波斯菊',begonia:'海棠',azalea:'杜鹃',wisteria:'紫藤',jasmine:'茉莉',plumeria:'鸡蛋花',lily:'百合',nightqueen:'昙花',
+  moon_silver:'银月花',moon_violet:'紫月华',moon_blood:'血月华',
+  cornflower:'矢车菊',foxglove:'毛地黄',thistle:'蓟花',columbine:'耧斗菜',edelweiss:'雪绒花',ghostpipe:'水晶兰'};
+const SP_LABEL_EN={lotus:'Lotus',bellflower:'Bellflower',tulip:'Tulip',daisy:'Daisy',poppy:'Poppy',clover:'Clover',lavender:'Lavender',rose:'Rose',orchid:'Orchid',moonflower:'Moonflower',breath:'Calm Bloom',sunflower:'Sunflower',dahlia:'Dahlia',camellia:'Camellia',iris:'Iris',
+  peony:'Peony',hibiscus:'Hibiscus',marigold:'Marigold',anemone:'Anemone',firelily:'Fire Lily',aurora:'Aurora Bloom',protea:'Protea',
+  strelitzia:'Bird of Paradise',gentian:'Gentian',snowlotus:'Snow Lotus',victoria:'Royal Waterlily',lycoris:'Red Spider Lily',bluerose:'Blue Rose',crownimperial:'Crown Imperial',
+  magnolia:'Magnolia',ranunculus:'Ranunculus',gardenia:'Gardenia',freesia:'Freesia',zinnia:'Zinnia',cosmos:'Cosmos',begonia:'Begonia',azalea:'Azalea',wisteria:'Wisteria',jasmine:'Jasmine',plumeria:'Plumeria',lily:'Lily',nightqueen:'Night Queen',
+  moon_silver:'Silvermoon',moon_violet:'Violetmoon',moon_blood:'Bloodmoon',
+  cornflower:'Cornflower',foxglove:'Foxglove',thistle:'Thistle',columbine:'Columbine',edelweiss:'Edelweiss',ghostpipe:'Ghost Pipe'};
+const SP_LABEL=new Proxy({},{get:(_,k)=>(LANG==='en'?SP_LABEL_EN:SP_LABEL_ZH)[k]});
+/* premium species locked behind Plus / paid purchase */
+const PREMIUM_SP=['rose','orchid','firelily'];
+/* per-species rarity tier — drives draw odds (#4) and the badge shown on each bloom.
+   5 tiers: common→uncommon→rare (free ceiling) → epic → legendary (paid / achievement / lucky-gacha) */
+const SP_RARITY={
+  daisy:'common',clover:'common',tulip:'common',
+  bellflower:'uncommon',poppy:'uncommon',breath:'uncommon',
+  lotus:'rare',moonflower:'rare',lavender:'rare',sunflower:'rare',
+  dahlia:'rare',camellia:'rare',hibiscus:'rare',marigold:'rare',
+  iris:'epic',peony:'epic',anemone:'epic',
+  magnolia:'epic',ranunculus:'epic',gardenia:'epic',freesia:'epic',zinnia:'epic',cosmos:'epic',
+  begonia:'epic',azalea:'epic',wisteria:'epic',jasmine:'epic',plumeria:'epic',lily:'epic',
+  rose:'legendary',orchid:'legendary',firelily:'legendary',aurora:'legendary',protea:'legendary',nightqueen:'legendary',
+  // achievement blooms (10 total): the 3 originals above + 7 new — all legendary, the honour-only crown tier
+  strelitzia:'legendary',gentian:'legendary',snowlotus:'legendary',victoria:'legendary',lycoris:'legendary',bluerose:'legendary',crownimperial:'legendary',
+  // sleep-only moon variants — one per acquisition track (#sleep-moons)
+  moon_silver:'rare',moon_violet:'epic',moon_blood:'legendary',
+  // gacha-exclusive surprise blooms — only ever obtained from a roll (#gacha-pool)
+  cornflower:'rare',foxglove:'rare',thistle:'epic',columbine:'epic',edelweiss:'legendary',ghostpipe:'legendary'};
+/* draw weights per tier — rarer species are far less likely from a random roll (#3/#4) */
+const RARE_WEIGHT={common:48,uncommon:30,rare:14,epic:3,legendary:1};
+/* signature palettes so paid / shop species read distinct at a glance (#5) — vivid c1, supporting c2 */
+const SP_TINT={sunflower:['#E0A94E','#C98A2E'],lavender:['#9B8BC4','#BCAEE0'],dahlia:['#C2603F','#E0795B'],camellia:['#D9606A','#E89AAC'],iris:['#7E6FB0','#A99AD8'],
+  peony:['#D14A7E','#E88AB0'],hibiscus:['#E0533F','#F0876B'],marigold:['#E8941F','#F0B84A'],anemone:['#8E6FC0','#C5B0E8'],
+  firelily:['#E85A2A','#F09030'],aurora:['#5BC8C0','#9A7FD8'],protea:['#C23A52','#E0A060'],
+  // plus-track epics — each a distinct signature so 15 blooms read apart
+  magnolia:['#E8C8D4','#D89AB0'],ranunculus:['#F0A03A','#E87850'],gardenia:['#EDE7D8','#CFC8B0'],freesia:['#F0D050','#E8A93E'],
+  zinnia:['#E0506A','#F0925A'],cosmos:['#D87AA8','#B07AC0'],begonia:['#E06850','#E89A6A'],azalea:['#E060A0','#F09AC0'],
+  wisteria:['#9A86C8','#C0AEE0'],jasmine:['#F4EFE0','#E8DCC0'],plumeria:['#F4D870','#F0A0A0'],lily:['#E8A0B8','#D87890'],
+  nightqueen:['#6E8AD0','#B49AE0'],
+  // achievement blooms (7 new) — each a distinct honour-tier signature, none clashing with coin/gacha species
+  strelitzia:['#E88A2E','#5B7FC8'],gentian:['#3A5BA8','#6E8FD0'],snowlotus:['#DCE6E0','#A8C0B8'],victoria:['#D85A8E','#E89AB8'],
+  lycoris:['#D83A3A','#F07050'],bluerose:['#5B6FC8','#9A8FE0'],crownimperial:['#E0A030','#F0C860'],
+  // sleep moon variants
+  moon_silver:['#9AA6C0','#C8CCDE'],moon_violet:['#8A6FC0','#B89AE0'],moon_blood:['#B0506A','#D88AA0'],
+  // gacha-exclusive surprise blooms — wilder, cooler signatures so they read apart from the cultivated shop blooms
+  cornflower:['#4A6FB0','#7B9AD8'],foxglove:['#B85C9E','#D98AC0'],thistle:['#7E5CA8','#A98FD0'],
+  columbine:['#5C8AA8','#8AB0C8'],edelweiss:['#EDEAE0','#C8C8B8'],ghostpipe:['#D8E0E0','#A8C0C0']};
+/* full plantable catalog — four acquisition tracks (#shop-tiers):
+   track:'free'      — grown from focus; tops out at rare
+   track:'coin'      — bought with coins earned from focus/mindful/sleep. Spans rare (cheap) → epic (mid) → legendary (the crown blooms).
+   track:'unbuyable' — money can't buy it; achievement unlock ONLY (never from a roll)
+   track:'gacha'     — gacha-exclusive surprise blooms; ONLY obtainable from a coin roll. Never sold, never an achievement (#gacha-pool)
+   Quality ladder: free < coin·rare < coin·epic < coin·legendary < achievement.
+   Every buyable bloom costs COINS — never cash. Real money (Bloom Plus subscription / lifetime) unlocks the ability to PLANT after the 7-day trial, not any specific flower. */
+const SPECIES_CATALOG=[
+  // free (5) — grown from focus, tops out at rare
+  {id:'daisy',base:true,track:'free'},{id:'clover',base:true,track:'free'},{id:'tulip',base:true,track:'free'},
+  {id:'bellflower',base:true,track:'free'},{id:'poppy',base:true,track:'free'},
+  // coin (25) — every buyable bloom is bought with earned coins: 7 rare (◍150) + 15 epic (◍350/400/450) + 3 legendary (◍900)
+  {id:'lotus',track:'coin',tier:'rare'},{id:'lavender',track:'coin',tier:'rare'},{id:'sunflower',track:'coin',tier:'rare'},
+  {id:'dahlia',track:'coin',tier:'rare'},{id:'camellia',track:'coin',tier:'rare'},{id:'hibiscus',track:'coin',tier:'rare'},{id:'marigold',track:'coin',tier:'rare'},
+  {id:'rose',track:'coin',tier:'legendary'},{id:'orchid',track:'coin',tier:'legendary'},{id:'firelily',track:'coin',tier:'legendary'},
+  // epic (15) — formerly Plus-only; now all coin-buyable, the epic middle band (◍350/400/450 gradient by richness)
+  {id:'iris',track:'coin',tier:'epic'},{id:'peony',track:'coin',tier:'epic'},{id:'anemone',track:'coin',tier:'epic'},
+  {id:'magnolia',track:'coin',tier:'epic'},{id:'ranunculus',track:'coin',tier:'epic'},{id:'gardenia',track:'coin',tier:'epic'},
+  {id:'freesia',track:'coin',tier:'epic'},{id:'zinnia',track:'coin',tier:'epic'},{id:'cosmos',track:'coin',tier:'epic'},
+  {id:'begonia',track:'coin',tier:'epic'},{id:'azalea',track:'coin',tier:'epic'},{id:'wisteria',track:'coin',tier:'epic'},
+  {id:'jasmine',track:'coin',tier:'epic'},{id:'plumeria',track:'coin',tier:'epic'},{id:'lily',track:'coin',tier:'epic'},
+  // achievement (10) — money can't buy; milestone unlock ONLY (never from a roll). 1 is a Plus-patron honour bloom (crownimperial)
+  {id:'aurora',track:'unbuyable',tier:'legendary'},{id:'protea',track:'unbuyable',tier:'legendary'},{id:'nightqueen',track:'unbuyable',tier:'legendary'},
+  {id:'strelitzia',track:'unbuyable',tier:'legendary'},{id:'gentian',track:'unbuyable',tier:'legendary'},{id:'snowlotus',track:'unbuyable',tier:'legendary'},
+  {id:'victoria',track:'unbuyable',tier:'legendary'},{id:'lycoris',track:'unbuyable',tier:'legendary'},{id:'bluerose',track:'unbuyable',tier:'legendary'},
+  {id:'crownimperial',track:'unbuyable',tier:'legendary',plusPatron:true},
+  // gacha (6) — gacha-exclusive surprise blooms; ONLY from a coin roll. 2 rare + 2 epic + 2 legendary (#gacha-pool)
+  {id:'cornflower',track:'gacha',tier:'rare'},{id:'foxglove',track:'gacha',tier:'rare'},
+  {id:'thistle',track:'gacha',tier:'epic'},{id:'columbine',track:'gacha',tier:'epic'},
+  {id:'edelweiss',track:'gacha',tier:'legendary'},{id:'ghostpipe',track:'gacha',tier:'legendary'},
+  // sleep-only moon variants (#sleep-moons) — one per track, shown ONLY in the Sleep picker, on top of the consistent set.
+  // They appear in the Sleep picker so any moon bloom in the garden is always selectable there (focus/mindful filter them out).
+  {id:'moonflower',base:true,track:'free',sleepOnly:true},
+  {id:'moon_silver',track:'coin',tier:'rare',sleepOnly:true},
+  {id:'moon_violet',track:'coin',tier:'epic',sleepOnly:true},
+  {id:'moon_blood',track:'unbuyable',tier:'legendary',sleepOnly:true}];
+/* coin price per buyable species — rare ≈ 1.5 days (~150), legendary ≈ 9 days (~900) of an active gardener's coins */
+// epic blooms sit on a 3-step gradient by visual richness (350 / 400 / 450) so the 15-strong mid band isn't one flat wall.
+// 5/5/5 split keeps the average at 400 and the total identical to the old flat 15×400.
+const EPIC_LOW=350,EPIC_MID=400,EPIC_HIGH=450,EPIC_PRICE=EPIC_MID;
+const COIN_PRICE={lotus:150,lavender:150,sunflower:150,dahlia:150,camellia:150,hibiscus:150,marigold:150,moon_silver:150,
+  iris:EPIC_LOW,peony:EPIC_LOW,anemone:EPIC_LOW,magnolia:EPIC_LOW,ranunculus:EPIC_LOW,
+  gardenia:EPIC_MID,freesia:EPIC_MID,zinnia:EPIC_MID,cosmos:EPIC_MID,begonia:EPIC_MID,moon_violet:EPIC_MID,
+  azalea:EPIC_HIGH,wisteria:EPIC_HIGH,jasmine:EPIC_HIGH,plumeria:EPIC_HIGH,lily:EPIC_HIGH,
+  rose:900,orchid:900,firelily:900};
+/* ownership rule (single source of truth): you own a species once you've unlocked it (coins / achievement / gacha).
+   Subscription (S.plus) no longer grants any flower — it gates PLANTING, not ownership. Free blooms are always plantable (handled in choose/pool). */
+const ownsSp=(S,id)=>(S.unlocked||[]).includes(id);
+
+/* ===== per-bloom flavour for the detail view (#5) ===== */
+/* a short "saying" — deterministic from the seed so each bloom keeps the same line every time */
+const SAYING_ZH=['每一次专注，都在悄悄生长。','你停下的那一刻，我便绽放。','没有两朵花完全相同，正如没有两段时光。','安静地用力，是最美的姿态。','今天的耐心，开成了明天的花。','向光而生，向静而息。','慢一点，也是一种盛开。','你给的每一分钟，我都记得。'];
+const SAYING_EN=['Every focused minute grows me a little.','The moment you paused, I opened.','No two blooms are alike — nor any two hours.','To strive quietly is the loveliest form.','Today’s patience blooms into tomorrow.','Toward light to grow, toward stillness to rest.','Slowing down is its own kind of blooming.','I remember every minute you gave me.'];
+/* a stable per-SPECIES seed (same formula the picker preview uses): every bloom of one species shares
+   the species' name + saying, so "what you preview is what you grow" (#5). Chain code stays per-bloom. */
+const speciesSeed=sp=>(String(sp).split('').reduce((a,c)=>a*31+c.charCodeAt(0),7)>>>0);
+const sayingFor=f=>{const a=LANG==='en'?SAYING_EN:SAYING_ZH;return a[(f&&f.species?speciesSeed(f.species):(f.seed>>>0))%a.length];};
+/* a faux on-chain token id — stable per bloom (from its unique seed), so each minted bloom stays one-of-a-kind */
+const chainCode=f=>{let h=(f.seed>>>0)^0x9e3779b9,s='';const hex='0123456789ABCDEF';for(let i=0;i<14;i++){h=(h^(h<<13))>>>0;h=(h^(h>>>17))>>>0;h=(h^(h<<5))>>>0;s+=hex[h&15];}return '0x'+s.slice(0,4)+'⋯'+s.slice(-8);};
+
+/* derive DNA from a focus record {min,hour,streak,seed,task,species?} */
+function dna(rec){
+  const r=rng(rec.seed);
+  // palette is driven by palHour when given, else hour. This lets sleep blooms (grown at night, hour:23 for the
+  // night GLOW) still wear their canonical daytime color so they match the picker preview — what you pick is what
+  // you get. glow/band below still read rec.hour, so the night ambiance is preserved. (#sleep-color-consistency)
+  const b=band(rec.palHour!=null?rec.palHour:rec.hour);const pal=PAL[b];
+  const species=rec.species||SPECIES[rec.task]||'daisy';
+  // sleep moonflowers get a special lavender/silver palette regardless of hour
+  let c1=pal[Math.floor(r()*pal.length)];let c2=pal[Math.floor(r()*pal.length)];if(c2===c1)c2=pal[(pal.indexOf(c1)+1)%pal.length];
+  // harmony guard: if the two picks are too close they read as a muddy single tone — push c2 a tier lighter so layers separate
+  if(colDist(c1,c2)<46)c2=mix(c2,'#FBF6EC',0.34);
+  if(species==='moonflower'){c1=['#9A8FB0','#8AA2B8','#A6B0C8'][Math.floor(r()*3)];c2='#C8C2DE';}
+  if(SP_TINT[species]){c1=SP_TINT[species][0];c2=mix(SP_TINT[species][1],pal[Math.floor(r()*pal.length)],0.25);}
+  // effort score E (0~1) drives fullness/size/rarity — each mode normalises its own effort to a comparable scale.
+  // focus → min/60 (45min→0.75→rare, 60min caps; preserves prior focus look), mindful → cycles/20, sleep → healthy-duration window health.
+  // callers pass rec.effort; fallback to min/60 keeps focus & legacy/demo records identical to before.
+  const E=rec.effort!=null?Math.max(0,Math.min(1,rec.effort)):Math.min(1,rec.min/60);
+  const petals=Math.max(7,Math.min(15,Math.round(E*9)+6+Math.floor(r()*3)));
+  const layers=E>=0.66?4:E>=0.33?3:2;   // always ≥2 layers so even short sessions read full & lush
+  const size=0.62+0.5*E+r()*0.1;
+  const sharp=r();
+  const ctrCol=mix(c1,'#F2EFE8',0.45);
+  // a species carries an intrinsic rarity floor; a high-effort session can still push a humble bloom up a tier (#4)
+  // free play tops out at 'rare' — epic/legendary are reserved for paid / achievement / lucky-gacha tracks
+  const earned=E>=0.75?'rare':rec.streak>=7?'uncommon':'common';
+  const ORD=['common','uncommon','rare','epic','legendary'];
+  const isMoon=species==='moonflower'||species.startsWith('moon_');
+  const floor=isMoon?(SP_RARITY[species]||'rare'):(SP_RARITY[species]||'common');
+  const rare=ORD[Math.max(ORD.indexOf(floor),ORD.indexOf(earned))];
+  const glow=band(rec.hour)==='night'||isMoon;
+  return {species,c1,c2,ctrCol,petals,layers,size,sharp,band:band(rec.hour),glow,rare,dots:2+Math.floor(r()*5),
+          twist:(r()-0.5)*16,stemH:34+Math.floor(r()*16),leaf:r()>0.35,bud:r()>0.6,v:r()};
+}
+
+/* ===== per-species silhouette builders =====
+   each returns the bloom-head markup (stem drawn separately). open:0..1 */
+function petal(len,wid,sharp){
+  return `M0 0 C ${wid} ${-len*0.2} ${wid*0.8} ${-len*0.7} 0 ${-len} ${sharp>0.5?`Q ${-wid*0.4} ${-len*0.6} 0 0`:`C ${-wid*0.3} ${-len*0.95} ${-wid*0.7} ${-len*0.5} 0 0`} Z`;
+}
+function headDaisy(d,cx,cy,open){ // classic radial — round, friendly
+  const len=20*d.size*(0.4+0.6*open),wid=8*d.size;let s='';
+  for(let L=0;L<d.layers;L++){const lr=1-L*0.22,n=d.petals-L*2,col=L%2?d.c2:d.c1,rot=d.twist+L*(180/d.petals);
+    for(let i=0;i<n;i++){const tf=`translate(${cx} ${cy-L*1.2}) rotate(${rot+i*(360/n)})`;
+      s+=`<path d="${petal(len*lr,wid*lr,d.sharp)}" fill="${gref(col)}" opacity="${0.96-L*0.08}" transform="${tf}"/>`;
+      s+=`<path d="M0 -${len*lr*0.12} L0 -${len*lr*0.82}" stroke="${shade(col,.3)}" stroke-width="${0.5*d.size}" stroke-linecap="round" opacity=".28" transform="${tf}"/>`;}}  // faint mid-vein
+  const cr=5.5*d.size*(0.5+0.5*open);s+=`<circle cx="${cx}" cy="${cy}" r="${cr}" fill="${cref(d.ctrCol)}"/>`;
+  for(let i=0;i<d.dots;i++){const a=i*(360/d.dots)*Math.PI/180;s+=`<circle cx="${cx+Math.cos(a)*cr*0.45}" cy="${cy+Math.sin(a)*cr*0.45}" r="${1.1*d.size}" fill="${mix(d.c2,'#3a3128',.3)}" opacity=".75"/>`;}
+  s+=`<circle cx="${cx-cr*0.3}" cy="${cy-cr*0.3}" r="${1.3*d.size}" fill="#FFFDF5" opacity=".7"/>`;   // dew highlight
+  return s;
+}
+function headTulip(d,cx,cy,open){ // closed cup — 3 overlapping upright petals
+  const h=30*d.size,w=11*d.size*(0.7+0.3*open);
+  const cup=(dx,col,sc)=>`<path d="M${cx+dx} ${cy} C ${cx+dx-w*sc} ${cy-h*0.3} ${cx+dx-w*sc*0.7} ${cy-h*sc} ${cx+dx} ${cy-h*sc} C ${cx+dx+w*sc*0.7} ${cy-h*sc} ${cx+dx+w*sc} ${cy-h*0.3} ${cx+dx} ${cy} Z" fill="${gref(col)}"/>`;
+  return cup(-w*0.5,d.c2,0.92)+cup(w*0.5,d.c2,0.92)+cup(0,d.c1,1);
+}
+function headBell(d,cx,cy,open){ // hanging bell clusters along arched stalk
+  let s='';const n=Math.max(3,Math.min(6,Math.floor(d.petals/2)));const bw=7*d.size,bh=11*d.size;
+  for(let i=0;i<n;i++){const t=i/(n-1),bx=cx+(t-0.5)*22*d.size,by=cy-i*5*d.size-(i*i*0.4),col=i%2?d.c2:d.c1,sc=0.7+0.3*open;
+    s+=`<path d="M${bx-bw*sc} ${by} Q ${bx-bw*sc} ${by+bh} ${bx} ${by+bh*1.15} Q ${bx+bw*sc} ${by+bh} ${bx+bw*sc} ${by} Q ${bx} ${by-bh*0.25} ${bx-bw*sc} ${by} Z" fill="${cref(col)}" opacity=".96"/>`;
+    s+=`<line x1="${bx}" y1="${by-bh*0.2}" x2="${bx}" y2="${by-4}" stroke="#7C8A63" stroke-width="1"/>`;}
+  return s;
+}
+function headPoppy(d,cx,cy,open){ // 4-6 wide crinkled bowl petals + dark center
+  const len=22*d.size*(0.45+0.55*open),wid=15*d.size,n=Math.max(4,Math.min(6,d.petals-3));let s='';
+  for(let i=0;i<n;i++){const a=d.twist+i*(360/n);
+    s+=`<path d="M0 0 C ${wid} ${-len*0.3} ${wid*0.6} ${-len} 0 ${-len} C ${-wid*0.6} ${-len} ${-wid} ${-len*0.3} 0 0 Z" fill="${gref(i%2?d.c2:d.c1)}" opacity=".94" transform="translate(${cx} ${cy}) rotate(${a})"/>`;}
+  const cr=6*d.size*(0.5+0.5*open);s+=`<circle cx="${cx}" cy="${cy}" r="${cr}" fill="${mix(d.c1,'#2a2018',.55)}"/>`;
+  for(let i=0;i<8;i++){const a=i*45*Math.PI/180;s+=`<line x1="${cx}" y1="${cy}" x2="${cx+Math.cos(a)*cr}" y2="${cy+Math.sin(a)*cr}" stroke="${mix(d.c1,'#100c08',.6)}" stroke-width=".8"/>`;}
+  return s;
+}
+function headLotus(d,cx,cy,open){ // many pointed layered petals — serene, wide
+  const len=21*d.size*(0.5+0.5*open),wid=7.5*d.size;let s='';
+  for(let L=0;L<Math.max(3,d.layers+1);L++){const lr=1-L*0.18,n=d.petals+2-L,col=mix(L%2?d.c2:d.c1,'#fff',L*0.08),rot=L*(180/(d.petals+2));
+    for(let i=0;i<n;i++)s+=`<path d="M0 0 C ${wid*lr} ${-len*lr*0.3} ${wid*lr*0.5} ${-len*lr} 0 ${-len*lr} C ${-wid*lr*0.5} ${-len*lr} ${-wid*lr} ${-len*lr*0.3} 0 0 Z" fill="${gref(col)}" opacity="${0.94-L*0.06}" transform="translate(${cx} ${cy}) rotate(${rot+i*(360/n)})"/>`;}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${4*d.size}" fill="${cref(d.ctrCol)}"/>`;return s;
+}
+function headClover(d,cx,cy,open){ // 3-4 rounded lobes — small, ground cover
+  const n=d.v>0.5?4:3,rr=11*d.size*(0.6+0.4*open);let s='';
+  for(let i=0;i<n;i++){const a=(i*(360/n)-90)*Math.PI/180,lx=cx+Math.cos(a)*rr*0.55,ly=cy+Math.sin(a)*rr*0.55;
+    s+=`<circle cx="${lx}" cy="${ly}" r="${rr*0.6}" fill="${cref(i%2?d.c2:d.c1)}" opacity=".95"/>`;}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${2.5*d.size}" fill="${cref(d.ctrCol)}"/>`;return s;
+}
+function headLavender(d,cx,cy,open){ // vertical spike of tiny florets
+  let s='';const n=8+Math.floor(d.size*4);const sp=4*d.size;
+  for(let i=0;i<n;i++){const t=i/n,by=cy-i*sp,bw=(1-t*0.6)*5*d.size*(0.7+0.3*open),off=(i%2?1:-1)*bw*0.5;
+    s+=`<ellipse cx="${cx+off}" cy="${by}" rx="${bw}" ry="${bw*1.3}" fill="${cref(i%2?d.c1:d.c2)}" opacity=".92"/>`;}
+  return s;
+}
+function headRose(d,cx,cy,open){ // spiral layered — premium
+  let s='';const layers=5;for(let L=layers;L>=0;L--){const rr=(3+L*3.2)*d.size*(0.5+0.5*open),n=3+L,col=mix(d.c1,d.c2,L/layers*0.6);
+    for(let i=0;i<n;i++){const a=(i*(360/n)+L*25)*Math.PI/180;
+      s+=`<path d="M${cx} ${cy} Q ${cx+Math.cos(a)*rr} ${cy+Math.sin(a)*rr-rr*0.4} ${cx+Math.cos(a)*rr*1.1} ${cy+Math.sin(a)*rr*1.1} Q ${cx+Math.cos(a+0.5)*rr} ${cy+Math.sin(a+0.5)*rr} ${cx} ${cy} Z" fill="${gref(col)}" opacity=".92"/>`;}}
+  return s;
+}
+function headOrchid(d,cx,cy,open){ // bilateral — premium, exotic
+  const sc=0.6+0.4*open,w=15*d.size;let s='';
+  // 3 upper sepals
+  [-50,0,50].forEach(a=>{s+=`<ellipse cx="${cx}" cy="${cy-w*0.5}" rx="${5*d.size}" ry="${10*d.size*sc}" fill="${cref(d.c1)}" opacity=".92" transform="rotate(${a} ${cx} ${cy})"/>`;});
+  // 2 lateral petals
+  [-110,110].forEach(a=>{s+=`<ellipse cx="${cx}" cy="${cy-w*0.45}" rx="${6.5*d.size}" ry="${8*d.size*sc}" fill="${cref(d.c2)}" opacity=".94" transform="rotate(${a} ${cx} ${cy})"/>`;});
+  // labellum
+  s+=`<path d="M${cx} ${cy} Q ${cx-7*d.size} ${cy+10*d.size} ${cx} ${cy+14*d.size*sc} Q ${cx+7*d.size} ${cy+10*d.size} ${cx} ${cy} Z" fill="${mix(d.c2,'#fff',.2)}"/>`;
+  s+=`<circle cx="${cx}" cy="${cy}" r="${3*d.size}" fill="${mix(d.c1,'#3a2818',.4)}"/>`;return s;
+}
+function headMoonflower(d,cx,cy,open){ // sleep species — 5 broad luminous petals, pale glow
+  const len=23*d.size*(0.5+0.5*open),wid=13*d.size,n=5;let s='';
+  for(let i=0;i<n;i++){const a=d.twist+i*(360/n);
+    s+=`<path d="M0 0 C ${wid} ${-len*0.25} ${wid*0.5} ${-len} 0 ${-len} C ${-wid*0.5} ${-len} ${-wid} ${-len*0.25} 0 0 Z" fill="${gref(mix(d.c1,'#F4F1FA',.4))}" opacity=".92" transform="translate(${cx} ${cy}) rotate(${a})"/>`;}
+  // inner star glow
+  for(let i=0;i<n;i++){const a=d.twist+36+i*(360/n);
+    s+=`<path d="M0 0 C ${wid*0.5} ${-len*0.2} ${wid*0.25} ${-len*0.6} 0 ${-len*0.62} C ${-wid*0.25} ${-len*0.6} ${-wid*0.5} ${-len*0.2} 0 0 Z" fill="${mix(d.c2,'#fff',.5)}" opacity=".7" transform="translate(${cx} ${cy}) rotate(${a})"/>`;}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${4.5*d.size}" fill="#F2EDDC"/><circle cx="${cx}" cy="${cy}" r="${2*d.size}" fill="${mix(d.c1,'#fff',.3)}"/>`;
+  return s;
+}
+function headBreath(d,cx,cy,open){ // mindfulness species — concentric calm rings of soft petals
+  const len=18*d.size*(0.55+0.45*open),wid=9*d.size,n=8;let s='';
+  for(let L=0;L<2;L++){const lr=1-L*0.3;
+    for(let i=0;i<n;i++){const a=L*22+i*(360/n);
+      s+=`<ellipse cx="${cx}" cy="${cy-len*lr*0.5}" rx="${wid*lr*0.6}" ry="${len*lr*0.55}" fill="${gref(L%2?d.c2:d.c1)}" opacity=".74" transform="rotate(${a} ${cx} ${cy})"/>`;}}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${5*d.size}" fill="${cref(mix(d.ctrCol,'#fff',.3))}"/>`;return s;
+}
+/* ===== bespoke silhouettes — one shape per species, no colour-swap clones (#flower-shapes) ===== */
+function headSunflower(d,cx,cy,open){ // 向日葵 — wide flat disc, 2 rings of pointed ray florets + seed-packed brown dome
+  const len=24*d.size*(0.45+0.55*open),wid=6*d.size;let s='';
+  for(let L=0;L<2;L++){const lr=1-L*0.15,n=14-L*2,rot=d.twist+L*(180/14);
+    for(let i=0;i<n;i++){const tf=`translate(${cx} ${cy}) rotate(${rot+i*(360/n)})`;
+      s+=`<path d="M0 0 C ${wid*lr} ${-len*lr*0.28} ${wid*lr*0.7} ${-len*lr} 0 ${-len*lr} C ${-wid*lr*0.7} ${-len*lr} ${-wid*lr} ${-len*lr*0.28} 0 0 Z" fill="${gref(L?mix(d.c1,d.c2,.5):d.c1)}" opacity="${0.96-L*0.06}" transform="${tf}"/>`;}}
+  const cr=9.5*d.size*(0.55+0.45*open);s+=`<circle cx="${cx}" cy="${cy}" r="${cr}" fill="${cref(mix(d.c1,'#4A2E12',.62))}"/>`;
+  for(let i=0;i<36;i++){const a=i*2.399963,rr=Math.sqrt(i/36)*cr*0.92;s+=`<circle cx="${cx+Math.cos(a)*rr}" cy="${cy+Math.sin(a)*rr}" r="${0.85*d.size}" fill="${mix(d.c1,'#241406',.5)}" opacity=".72"/>`;}
+  return s;
+}
+function headMarigold(d,cx,cy,open){ // 万寿菊 — dense ruffled pompom ball, tightly packed concentric crinkled petals, no open center
+  let s='';const rings=4,maxR=15*d.size*(0.6+0.4*open);
+  for(let L=rings;L>=0;L--){const rr=maxR*(0.42+0.58*L/rings),n=6+L*4,col=mix(d.c1,d.c2,(rings-L)/rings*0.65);
+    for(let i=0;i<n;i++){const a=(i*(360/n)+L*15)*Math.PI/180,px=cx+Math.cos(a)*rr*0.7,py=cy+Math.sin(a)*rr*0.7,pr=rr*0.33;
+      s+=`<path d="M${px} ${py} q ${-pr} ${-pr*1.3} 0 ${-pr*1.8} q ${pr} ${pr*0.5} 0 ${pr*1.8} Z" fill="${gref(col)}" opacity=".95" transform="rotate(${i*(360/n)+L*15} ${px} ${py})"/>`;
+      s+=`<circle cx="${px}" cy="${py}" r="${pr*0.8}" fill="${gref(col)}" opacity=".9"/>`;}}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${maxR*0.3}" fill="${cref(mix(d.c2,'#fff',.22))}" opacity=".92"/>`;
+  return s;
+}
+function headFreesia(d,cx,cy,open){ // 小苍兰 — one-sided arching raceme: 4-6 upward funnel florets marching along a curving stalk
+  let s='';const n=Math.max(4,Math.min(6,Math.floor(d.petals/2.2)));const fw=6*d.size,fh=12*d.size;
+  for(let i=0;i<n;i++){const t=i/(n-1);
+    const bx=cx-9*d.size+t*19*d.size, by=cy-i*7*d.size+Math.pow(t,2)*4*d.size;
+    const sc=(0.55+0.55*t)*(0.7+0.3*open),col=i%2?d.c2:d.c1,ang=30-t*52;
+    const fr=`translate(${bx} ${by}) rotate(${ang})`;
+    s+=`<path d="M0 0 C ${-fw*sc} ${-fh*sc*0.42} ${-fw*sc*0.8} ${-fh*sc} 0 ${-fh*sc} C ${fw*sc*0.8} ${-fh*sc} ${fw*sc} ${-fh*sc*0.42} 0 0 Z" fill="${gref(col)}" opacity=".95" transform="${fr}"/>`;
+    s+=`<ellipse cx="0" cy="${-fh*sc}" rx="${fw*sc*0.95}" ry="${fw*sc*0.5}" fill="${gref(mix(col,'#fff',.28))}" opacity=".92" transform="${fr}"/>`;
+    if(i<n-1)s+=`<circle cx="${bx}" cy="${by}" r="${1.4*d.size}" fill="#8FA081" opacity=".7"/>`;}
+  return s;
+}
+function headSpiderLily(d,cx,cy,open){ // 彼岸花/lycoris — recurved thread-petals + very long upswept stamens (no leaves; lore-driven)
+  let s='';const n=6,len=24*d.size*(0.5+0.5*open);
+  for(let i=0;i<n;i++){const rad=(d.twist+i*(360/n))*Math.PI/180,c=Math.cos(rad),sn=Math.sin(rad);
+    const ex=cx+c*len, ey=cy+sn*len*0.5-len*0.32;                 // petal sweeps out
+    const bx=cx+c*len*0.4, by=cy+sn*len*0.45-len*0.12;
+    const tipx=cx+c*len*0.66, tipy=cy+sn*len*0.42-len*0.78;       // then curls sharply back up (recurve)
+    s+=`<path d="M${cx} ${cy} Q ${bx} ${by} ${ex} ${ey} Q ${ex+c*3} ${ey-11*d.size} ${tipx} ${tipy}" stroke="${gref(i%2?d.c2:d.c1)}" stroke-width="${2.3*d.size}" fill="none" stroke-linecap="round" opacity=".96"/>`;
+    const sx=cx+c*len*0.78, sy=cy+sn*len*0.4-len*0.95;            // long stamen, longer than the petal
+    s+=`<path d="M${cx} ${cy} Q ${bx} ${by-7} ${sx} ${sy}" stroke="${mix(d.c1,'#2A0606',.28)}" stroke-width="${0.8*d.size}" fill="none" stroke-linecap="round" opacity=".82"/>`;
+    s+=`<circle cx="${sx}" cy="${sy}" r="${1.2*d.size}" fill="${mix(d.c2,'#FFEFC8',.55)}"/>`;}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${2.6*d.size}" fill="${cref(mix(d.c1,'#3A0808',.45))}"/>`;
+  return s;
+}
+function headDahlia(d,cx,cy,open){ // 大丽花 — geometric ball-dahlia: many rolled pointed petals in tight concentric rings, quilled tips
+  let s='';const rings=4,maxL=20*d.size*(0.5+0.5*open),wid=4.5*d.size;
+  for(let L=rings;L>=0;L--){const lr=0.42+0.58*L/rings,n=6+L*3,col=mix(d.c1,d.c2,(rings-L)/rings*0.5),rot=L*14;
+    for(let i=0;i<n;i++){const tf=`translate(${cx} ${cy}) rotate(${rot+i*(360/n)})`,len=maxL*lr;
+      s+=`<path d="M0 0 C ${wid} ${-len*0.35} ${wid*0.5} ${-len*0.9} 0 ${-len} C ${-wid*0.5} ${-len*0.9} ${-wid} ${-len*0.35} 0 0 Z" fill="${gref(col)}" opacity="${0.97-(rings-L)*0.04}" transform="${tf}"/>`;
+      s+=`<path d="M0 -${len*0.2} L0 -${len*0.92}" stroke="${shade(col,.32)}" stroke-width="${0.5*d.size}" opacity=".3" transform="${tf}"/>`;}}  // quill crease
+  s+=`<circle cx="${cx}" cy="${cy}" r="${2.4*d.size}" fill="${cref(mix(d.c2,'#fff',.3))}"/>`;return s;
+}
+function headCamellia(d,cx,cy,open){ // 山茶 — formal rose-like rosette of broad rounded overlapping petals + golden stamen cluster
+  let s='';const rings=3,maxR=16*d.size*(0.55+0.45*open);
+  for(let L=rings;L>=0;L--){const rr=maxR*(0.5+0.5*L/rings),n=5+L,col=mix(d.c1,d.c2,(rings-L)/rings*0.45),rot=L*22;
+    for(let i=0;i<n;i++){const a=(rot+i*(360/n))*Math.PI/180,px=cx+Math.cos(a)*rr*0.3,py=cy+Math.sin(a)*rr*0.3;
+      s+=`<ellipse cx="${px}" cy="${py-rr*0.42}" rx="${rr*0.46}" ry="${rr*0.56}" fill="${gref(col)}" opacity=".96" transform="rotate(${rot+i*(360/n)} ${px} ${py})"/>`;}}
+  for(let i=0;i<10;i++){const a=i*36*Math.PI/180,sr=3.4*d.size;s+=`<circle cx="${cx+Math.cos(a)*sr}" cy="${cy+Math.sin(a)*sr}" r="${1.1*d.size}" fill="#F2C84A"/>`;}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${2.2*d.size}" fill="#E8B83A"/>`;return s;
+}
+function headHibiscus(d,cx,cy,open){ // 扶桑 — 5 broad flaring trumpet petals + a long protruding central staminal column
+  const len=23*d.size*(0.5+0.5*open),wid=16*d.size,n=5;let s='';
+  for(let i=0;i<n;i++){const a=d.twist+i*(360/n);
+    s+=`<path d="M0 0 C ${wid*0.85} ${-len*0.2} ${wid} ${-len*0.85} ${wid*0.32} ${-len} C ${wid*0.1} ${-len*1.02} ${-wid*0.1} ${-len*1.02} ${-wid*0.32} ${-len} C ${-wid} ${-len*0.85} ${-wid*0.85} ${-len*0.2} 0 0 Z" fill="${gref(i%2?d.c2:d.c1)}" opacity=".95" transform="translate(${cx} ${cy}) rotate(${a})"/>`;
+    s+=`<path d="M0 -${len*0.15} L0 -${len*0.86}" stroke="${shade(d.c1,.4)}" stroke-width="${0.9*d.size}" opacity=".4" transform="translate(${cx} ${cy}) rotate(${a})"/>`;}  // deep crimson vein
+  const col=`M${cx} ${cy} Q ${cx+2*d.size} ${cy-13*d.size} ${cx} ${cy-19*d.size}`;   // staminal column shoots out
+  s+=`<path d="${col}" stroke="${mix(d.c1,'#B01030',.5)}" stroke-width="${1.6*d.size}" fill="none" stroke-linecap="round"/>`;
+  for(let i=0;i<5;i++)s+=`<circle cx="${cx+(i-2)*1.6*d.size}" cy="${cy-19*d.size-Math.abs(i-2)*1.2}" r="${1.3*d.size}" fill="#F4D44A"/>`;
+  s+=`<circle cx="${cx}" cy="${cy}" r="${3*d.size}" fill="${cref(mix(d.c1,'#7A0820',.4))}"/>`;return s;
+}
+function headIris(d,cx,cy,open){ // 鸢尾 — 3 upright standards + 3 drooping falls with bright signal beards
+  const sc=0.55+0.45*open,w=9*d.size,h=20*d.size;let s='';
+  [-32,0,32].forEach(a=>{s+=`<path d="M${cx} ${cy} C ${cx-w*0.6} ${cy-h*0.5} ${cx-w*0.4} ${cy-h*sc} ${cx} ${cy-h*sc} C ${cx+w*0.4} ${cy-h*sc} ${cx+w*0.6} ${cy-h*0.5} ${cx} ${cy} Z" fill="${gref(d.c1)}" opacity=".95" transform="rotate(${a} ${cx} ${cy})"/>`;});  // standards
+  [140,180,220].forEach(a=>{s+=`<path d="M${cx} ${cy} C ${cx-w*0.8} ${cy+h*0.3} ${cx-w*0.55} ${cy+h*sc} ${cx} ${cy+h*sc} C ${cx+w*0.55} ${cy+h*sc} ${cx+w*0.8} ${cy+h*0.3} ${cx} ${cy} Z" fill="${gref(d.c2)}" opacity=".95" transform="rotate(${a-180} ${cx} ${cy})"/>`;
+    s+=`<path d="M${cx} ${cy+2} L${cx} ${cy+h*sc*0.78}" stroke="#F2C84A" stroke-width="${2*d.size}" stroke-linecap="round" opacity=".9" transform="rotate(${a-180} ${cx} ${cy})"/>`;});  // beard
+  s+=`<circle cx="${cx}" cy="${cy}" r="${2.4*d.size}" fill="${cref(d.ctrCol)}"/>`;return s;
+}
+function headPeony(d,cx,cy,open){ // 牡丹 — huge full double bloom: many large ruffled overlapping petals, lush dome
+  let s='';const rings=4,maxR=18*d.size*(0.55+0.45*open);
+  for(let L=rings;L>=0;L--){const rr=maxR*(0.4+0.6*L/rings),n=6+L*2,col=mix(d.c1,d.c2,(rings-L)/rings*0.5),rot=L*18;
+    for(let i=0;i<n;i++){const a=(rot+i*(360/n))*Math.PI/180,px=cx+Math.cos(a)*rr*0.34,py=cy+Math.sin(a)*rr*0.34;
+      s+=`<path d="M${px} ${py} q ${-rr*0.4} ${-rr*0.4} ${-rr*0.18} ${-rr*0.72} q ${rr*0.22} ${-rr*0.12} ${rr*0.18} ${-rr*0.12} q ${0} ${0} ${rr*0.18} ${rr*0.12} q ${rr*0.22} ${rr*0.32} ${-rr*0.18} ${rr*0.72} Z" fill="${gref(col)}" opacity=".95" transform="rotate(${rot+i*(360/n)} ${px} ${py})"/>`;}}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${maxR*0.22}" fill="${cref(mix(d.c2,'#fff',.35))}"/>`;return s;
+}
+function headAnemone(d,cx,cy,open){ // 银莲花 — flat ring of rounded petals around a big dramatic dark button center
+  const len=20*d.size*(0.5+0.5*open),wid=11*d.size,n=Math.max(6,Math.min(8,d.petals-5));let s='';
+  for(let i=0;i<n;i++){const a=d.twist+i*(360/n);
+    s+=`<path d="M0 0 C ${wid} ${-len*0.35} ${wid*0.55} ${-len} 0 ${-len} C ${-wid*0.55} ${-len} ${-wid} ${-len*0.35} 0 0 Z" fill="${gref(i%2?d.c2:d.c1)}" opacity=".95" transform="translate(${cx} ${cy}) rotate(${a})"/>`;}
+  const cr=6.5*d.size*(0.5+0.5*open);s+=`<circle cx="${cx}" cy="${cy}" r="${cr*1.18}" fill="${mix(d.c1,'#1A1012',.66)}"/>`;
+  for(let i=0;i<28;i++){const a=i*(360/28)*Math.PI/180,rr=cr*(0.5+0.5*((i*37)%10)/10);s+=`<circle cx="${cx+Math.cos(a)*rr}" cy="${cy+Math.sin(a)*rr}" r="${0.9*d.size}" fill="${mix(d.c1,'#000',.4)}" opacity=".8"/>`;}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${cr*0.5}" fill="${mix(d.c1,'#26161a',.7)}"/>`;return s;
+}
+function headMagnolia(d,cx,cy,open){ // 玉兰 — 6-9 large upright tepals forming an open chalice/goblet, broad at tip
+  const n=Math.max(6,Math.min(9,d.petals-4)),len=24*d.size*(0.5+0.5*open),wid=8*d.size;let s='';
+  for(let i=0;i<n;i++){const a=d.twist+i*(360/n),splay=1-0.35*Math.abs(((i%n)/(n-1))-0.5)*2;
+    s+=`<path d="M0 0 C ${wid} ${-len*0.3} ${wid*1.1} ${-len*0.8} ${wid*0.45} ${-len} C ${wid*0.15} ${-len*1.05} ${-wid*0.15} ${-len*1.05} ${-wid*0.45} ${-len} C ${-wid*1.1} ${-len*0.8} ${-wid} ${-len*0.3} 0 0 Z" fill="${gref(i%2?d.c2:d.c1)}" opacity=".94" transform="translate(${cx} ${cy}) rotate(${a}) scale(1 ${splay})"/>`;}
+  s+=`<ellipse cx="${cx}" cy="${cy-3*d.size}" rx="${2.4*d.size}" ry="${5*d.size}" fill="${cref(mix(d.c2,'#E8C84A',.4))}"/>`;return s;
+}
+function headRanunculus(d,cx,cy,open){ // 花毛茛 — tight paper-thin tissue rosette, dozens of small layered crescents, green eye
+  let s='';const rings=5,maxR=15*d.size*(0.55+0.45*open);
+  for(let L=rings;L>=0;L--){const rr=maxR*(0.3+0.7*L/rings),n=7+L*3,col=mix(d.c1,d.c2,(rings-L)/rings*0.55),rot=L*11;
+    for(let i=0;i<n;i++){const a=(rot+i*(360/n))*Math.PI/180,px=cx+Math.cos(a)*rr*0.6,py=cy+Math.sin(a)*rr*0.6;
+      s+=`<path d="M${px} ${py} a ${rr*0.3} ${rr*0.3} 0 0 1 ${Math.cos(a+1.4)*rr*0.36} ${Math.sin(a+1.4)*rr*0.36}" fill="none" stroke="${gref(col)}" stroke-width="${rr*0.26}" stroke-linecap="round" opacity=".9"/>`;}}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${maxR*0.2}" fill="${cref(mix('#7A9A5A',d.c1,.3))}"/>`;return s;
+}
+function headGardenia(d,cx,cy,open){ // 栀子 — creamy pinwheel of broad spiraled petals, waxy, ivory
+  let s='';const rings=2,n=8;const len=18*d.size*(0.55+0.45*open),wid=10*d.size;
+  for(let L=0;L<=rings;L++){const lr=1-L*0.26,rot=d.twist+L*20;
+    for(let i=0;i<n;i++){const a=rot+i*(360/n);
+      s+=`<path d="M0 0 C ${wid*lr*1.1} ${-len*lr*0.2} ${wid*lr} ${-len*lr*0.85} ${wid*lr*0.15} ${-len*lr} C ${-wid*lr*0.2} ${-len*lr*1.02} ${-wid*lr*0.5} ${-len*lr*0.6} 0 0 Z" fill="${gref(mix(L%2?d.c2:d.c1,'#fff',L*0.12))}" opacity="${0.95-L*0.05}" transform="translate(${cx} ${cy}) rotate(${a})"/>`;}}  // spiral swirl
+  s+=`<circle cx="${cx}" cy="${cy}" r="${2.6*d.size}" fill="${cref(mix(d.c1,'#E8E0C0',.5))}"/>`;return s;
+}
+function headZinnia(d,cx,cy,open){ // 百日菊 — flat dense daisy of many notched rays in 2-3 rows + ringed yellow center
+  const len=18*d.size*(0.45+0.55*open),wid=5.5*d.size;let s='';
+  for(let L=0;L<3;L++){const lr=1-L*0.16,n=12-L*2,rot=d.twist+L*(180/12);
+    for(let i=0;i<n;i++){const tf=`translate(${cx} ${cy}) rotate(${rot+i*(360/n)})`;
+      s+=`<path d="M0 0 L ${wid*lr} ${-len*lr*0.5} L ${wid*lr*0.5} ${-len*lr} L 0 ${-len*lr*0.86} L ${-wid*lr*0.5} ${-len*lr} L ${-wid*lr} ${-len*lr*0.5} Z" fill="${gref(L%2?d.c2:d.c1)}" opacity="${0.95-L*0.05}" transform="${tf}"/>`;}}  // notched ray
+  const cr=5.5*d.size;s+=`<circle cx="${cx}" cy="${cy}" r="${cr}" fill="${cref('#E8B83A')}"/>`;
+  for(let i=0;i<8;i++){const a=i*45*Math.PI/180;s+=`<path d="M${cx+Math.cos(a)*cr*0.6} ${cy+Math.sin(a)*cr*0.6} l 1.5 -2" stroke="#C98A2E" stroke-width="${1.2*d.size}" stroke-linecap="round"/>`;}
+  return s;
+}
+function headCosmos(d,cx,cy,open){ // 波斯菊 — airy single ring of just 8 broad notched petals, wide gaps, yellow disc
+  const len=22*d.size*(0.45+0.55*open),wid=9*d.size,n=8;let s='';
+  for(let i=0;i<n;i++){const a=d.twist+i*(360/n);
+    s+=`<path d="M0 0 C ${wid} ${-len*0.4} ${wid*0.8} ${-len*0.95} ${wid*0.3} ${-len} L 0 ${-len*0.9} L ${-wid*0.3} ${-len} C ${-wid*0.8} ${-len*0.95} ${-wid} ${-len*0.4} 0 0 Z" fill="${gref(i%2?d.c2:d.c1)}" opacity=".94" transform="translate(${cx} ${cy}) rotate(${a})"/>`;}  // shallow-notched tip
+  const cr=5*d.size;s+=`<circle cx="${cx}" cy="${cy}" r="${cr}" fill="${cref('#E8B040')}"/>`;
+  for(let i=0;i<d.dots+4;i++){const a=i*(360/(d.dots+4))*Math.PI/180;s+=`<circle cx="${cx+Math.cos(a)*cr*0.5}" cy="${cy+Math.sin(a)*cr*0.5}" r="${1*d.size}" fill="#C9902E"/>`;}
+  return s;
+}
+function headBegonia(d,cx,cy,open){ // 海棠 — layered camellia-like but with asymmetric notched broad petals, blush gradient
+  let s='';const rings=3,maxR=15*d.size*(0.55+0.45*open);
+  for(let L=rings;L>=0;L--){const rr=maxR*(0.45+0.55*L/rings),n=5+L,col=mix(d.c1,d.c2,(rings-L)/rings*0.5),rot=L*26;
+    for(let i=0;i<n;i++){const a=(rot+i*(360/n))*Math.PI/180,px=cx+Math.cos(a)*rr*0.32,py=cy+Math.sin(a)*rr*0.32;
+      s+=`<path d="M${px} ${py} C ${px-rr*0.5} ${py-rr*0.3} ${px-rr*0.45} ${py-rr*0.8} ${px} ${py-rr*0.78} C ${px+rr*0.18} ${py-rr*0.92} ${px+rr*0.5} ${py-rr*0.6} ${px+rr*0.4} ${py-rr*0.2} Z" fill="${gref(col)}" opacity=".95" transform="rotate(${rot+i*(360/n)} ${px} ${py})"/>`;}}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${maxR*0.22}" fill="${cref('#F2D24A')}"/>`;return s;
+}
+function headAzalea(d,cx,cy,open){ // 杜鹃 — 5 broad fused funnel lobes (flat-faced trumpet) + speckled upper throat
+  const len=22*d.size*(0.5+0.5*open),wid=14*d.size,n=5;let s='';
+  for(let i=0;i<n;i++){const a=d.twist+i*(360/n);
+    s+=`<path d="M0 0 C ${wid*0.7} ${-len*0.25} ${wid} ${-len*0.7} ${wid*0.4} ${-len} C ${wid*0.15} ${-len*1.04} ${-wid*0.15} ${-len*1.04} ${-wid*0.4} ${-len} C ${-wid} ${-len*0.7} ${-wid*0.7} ${-len*0.25} 0 0 Z" fill="${gref(i%2?d.c2:d.c1)}" opacity=".94" transform="translate(${cx} ${cy}) rotate(${a})"/>`;}
+  // speckles on the top lobe (signal guides)
+  const ta=d.twist*Math.PI/180;for(let i=0;i<6;i++){const rr=(0.4+i*0.08)*len,off=(i%2?1:-1)*2*d.size;s+=`<circle cx="${cx+Math.cos(ta-Math.PI/2)*rr+off}" cy="${cy+Math.sin(ta-Math.PI/2)*rr}" r="${0.9*d.size}" fill="${mix(d.c1,'#7A1840',.5)}" opacity=".7"/>`;}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${3*d.size}" fill="${cref(mix(d.c1,'#fff',.3))}"/>`;
+  for(let i=0;i<5;i++){const a=(d.twist+18+i*40)*Math.PI/180;s+=`<line x1="${cx}" y1="${cy}" x2="${cx+Math.cos(a)*len*0.5}" y2="${cy+Math.sin(a)*len*0.5}" stroke="#E8C84A" stroke-width="${0.7*d.size}" opacity=".6"/>`;}
+  return s;
+}
+function headWisteria(d,cx,cy,open){ // 紫藤 — long hanging pendulous cascade of pea-flowers, narrowing downward
+  let s='';const n=10+Math.floor(d.size*3);const sp=4.5*d.size;
+  for(let i=0;i<n;i++){const t=i/n,by=cy-6+i*sp,bw=(1-t*0.55)*5*d.size*(0.7+0.3*open),off=(i%2?1:-1)*bw*0.7,col=mix(d.c1,d.c2,t*0.6);
+    s+=`<path d="M${cx+off} ${by} q ${-bw} ${bw*0.3} ${-bw*0.5} ${bw*1.2} q ${bw*0.5} ${bw*0.3} ${bw} 0 q ${bw*0.5} ${-bw*0.9} ${-bw*0.5} ${-bw*1.2} Z" fill="${gref(col)}" opacity=".92"/>`;
+    s+=`<line x1="${cx}" y1="${by-sp}" x2="${cx+off}" y2="${by}" stroke="#7C8A63" stroke-width=".8" opacity=".6"/>`;}
+  return s;
+}
+function headJasmine(d,cx,cy,open){ // 茉莉 — small cluster of 3-4 simple 5-pointed star flowers, dainty white
+  let s='';const spots=[[0,0,1],[-9,4,0.7],[9,5,0.7],[0,11,0.62]];
+  spots.forEach(([dx,dy,sc])=>{const px=cx+dx*d.size,py=cy+dy*d.size,r=7*d.size*sc*(0.6+0.4*open);
+    for(let i=0;i<5;i++){const a=(i*72-90)*Math.PI/180;s+=`<ellipse cx="${px+Math.cos(a)*r*0.55}" cy="${py+Math.sin(a)*r*0.55}" rx="${r*0.4}" ry="${r*0.58}" fill="${gref(mix(d.c1,'#fff',.3))}" opacity=".95" transform="rotate(${i*72} ${px+Math.cos(a)*r*0.55} ${py+Math.sin(a)*r*0.55})"/>`;}
+    s+=`<circle cx="${px}" cy="${py}" r="${1.8*d.size*sc}" fill="${cref('#F2D85A')}"/>`;});
+  return s;
+}
+function headPlumeria(d,cx,cy,open){ // 鸡蛋花 — 5 thick rounded pinwheel petals overlapping one way, sunny throat
+  const len=20*d.size*(0.5+0.5*open),wid=13*d.size,n=5;let s='';
+  for(let i=0;i<n;i++){const a=d.twist+i*(360/n);
+    s+=`<path d="M0 0 C ${wid*0.9} ${-len*0.1} ${wid} ${-len*0.7} ${wid*0.2} ${-len} C ${-wid*0.1} ${-len*1.0} ${-wid*0.4} ${-len*0.5} 0 0 Z" fill="${gref(mix(d.c1,'#fff',.12))}" opacity=".96" transform="translate(${cx} ${cy}) rotate(${a})"/>`;}  // asymmetric overlap = pinwheel
+  s+=`<circle cx="${cx}" cy="${cy}" r="${6*d.size*(0.5+0.5*open)}" fill="${cref(mix(d.c2,'#F4D24A',.6))}"/>`;
+  s+=`<circle cx="${cx}" cy="${cy}" r="${2.4*d.size}" fill="${cref('#F0C040')}"/>`;return s;
+}
+function headLily(d,cx,cy,open){ // 百合 — 6 long recurved tepals (star-trumpet) + 6 prominent anthers on filaments
+  const len=26*d.size*(0.5+0.5*open),wid=7*d.size,n=6;let s='';
+  for(let i=0;i<n;i++){const a=d.twist+i*(360/n),inner=i%2===0;
+    s+=`<path d="M0 0 C ${wid} ${-len*0.3} ${wid*0.7} ${-len*0.85} 0 ${-len} C ${wid*0.5} ${-len*1.12} ${wid*0.2} ${-len*1.16} 0 ${-len*1.1} C ${-wid*0.2} ${-len*1.16} ${-wid*0.5} ${-len*1.12} 0 ${-len} C ${-wid*0.7} ${-len*0.85} ${-wid} ${-len*0.3} 0 0 Z" fill="${gref(inner?d.c1:d.c2)}" opacity=".94" transform="translate(${cx} ${cy}) rotate(${a})"/>`;
+    s+=`<path d="M0 -${len*0.12} L0 -${len*0.9}" stroke="${shade(d.c1,.35)}" stroke-width="${0.6*d.size}" opacity=".35" transform="translate(${cx} ${cy}) rotate(${a})"/>`;}
+  for(let i=0;i<6;i++){const a=(d.twist+i*60)*Math.PI/180,fl=9*d.size;s+=`<line x1="${cx}" y1="${cy}" x2="${cx+Math.cos(a-Math.PI/2)*fl}" y2="${cy+Math.sin(a-Math.PI/2)*fl}" stroke="#C9A24B" stroke-width="${0.8*d.size}"/>`;s+=`<ellipse cx="${cx+Math.cos(a-Math.PI/2)*fl}" cy="${cy+Math.sin(a-Math.PI/2)*fl}" rx="${2*d.size}" ry="${1*d.size}" fill="#B0682A" transform="rotate(${i*60} ${cx+Math.cos(a-Math.PI/2)*fl} ${cy+Math.sin(a-Math.PI/2)*fl})"/>`;}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${2.2*d.size}" fill="${cref(mix(d.c1,'#7AA030',.3))}"/>`;return s;
+}
+function headFireLily(d,cx,cy,open){ // 火百合 — flame-like recurved tepals sweeping sharply upward, blazing tips
+  const len=26*d.size*(0.5+0.5*open),wid=6*d.size,n=6;let s='';
+  for(let i=0;i<n;i++){const rad=(d.twist+i*(360/n))*Math.PI/180,c=Math.cos(rad),sn=Math.sin(rad);
+    const ex=cx+c*len*0.5,ey=cy+sn*len*0.4-len*0.5;          // sweep out
+    const tx=cx+c*len*0.3,ty=cy+sn*len*0.3-len*1.05;          // then flame back up
+    s+=`<path d="M${cx} ${cy} Q ${cx+c*len*0.7} ${cy+sn*len*0.5-len*0.1} ${ex} ${ey} Q ${ex} ${ey-len*0.4} ${tx} ${ty}" stroke="${gref(i%2?d.c2:d.c1)}" stroke-width="${3.2*d.size}" fill="none" stroke-linecap="round" opacity=".95"/>`;}
+  for(let i=0;i<6;i++){const a=(d.twist+i*60)*Math.PI/180,fl=11*d.size;s+=`<line x1="${cx}" y1="${cy}" x2="${cx+Math.cos(a-Math.PI/2)*fl}" y2="${cy+Math.sin(a-Math.PI/2)*fl}" stroke="#7A2810" stroke-width="${0.8*d.size}"/>`;s+=`<circle cx="${cx+Math.cos(a-Math.PI/2)*fl}" cy="${cy+Math.sin(a-Math.PI/2)*fl}" r="${1.6*d.size}" fill="#3A1808"/>`;}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${2.6*d.size}" fill="${cref(mix(d.c1,'#7A1808',.4))}"/>`;return s;
+}
+function headAurora(d,cx,cy,open){ // 极光花 — orchid-like bilateral bloom with long flowing ribbon petals (the iridescent crown)
+  const sc=0.6+0.4*open,w=14*d.size;let s='';
+  [-58,-20,20,58].forEach((a,k)=>{const ln=(k===0||k===3?18:13)*d.size*sc;s+=`<path d="M${cx} ${cy} C ${cx-4} ${cy-ln*0.6} ${cx-7} ${cy-ln} ${cx} ${cy-ln*1.3} C ${cx+7} ${cy-ln} ${cx+4} ${cy-ln*0.6} ${cx} ${cy} Z" fill="${gref(k%2?d.c2:d.c1)}" opacity=".9" transform="rotate(${a} ${cx} ${cy})"/>`;});  // ribbon petals
+  s+=`<path d="M${cx} ${cy} Q ${cx-9*d.size} ${cy+13*d.size} ${cx} ${cy+18*d.size*sc} Q ${cx+9*d.size} ${cy+13*d.size} ${cx} ${cy} Z" fill="${gref(mix(d.c2,'#fff',.25))}"/>`;  // flowing labellum
+  s+=`<circle cx="${cx}" cy="${cy}" r="${3*d.size}" fill="${cref(mix(d.c1,'#fff',.4))}"/>`;return s;
+}
+function headProtea(d,cx,cy,open){ // 帝王花 — huge architectural goblet: ring of sharp pointed bracts around a fuzzy domed center
+  const len=24*d.size*(0.5+0.5*open),wid=6*d.size,n=Math.max(10,d.petals+2);let s='';
+  for(let L=0;L<2;L++){const lr=1-L*0.22,rot=L*(180/n);
+    for(let i=0;i<n;i++){const a=rot+i*(360/n);s+=`<path d="M0 0 L ${wid*lr} ${-len*lr*0.55} L 0 ${-len*lr} L ${-wid*lr} ${-len*lr*0.55} Z" fill="${gref(mix(L%2?d.c2:d.c1,'#fff',L*0.1))}" opacity="${0.95-L*0.06}" transform="translate(${cx} ${cy}) rotate(${a})"/>`;}}  // sharp bracts
+  const cr=8*d.size*(0.55+0.45*open);s+=`<circle cx="${cx}" cy="${cy}" r="${cr}" fill="${cref(mix(d.c1,'#fff',.2))}"/>`;
+  for(let i=0;i<40;i++){const a=i*2.39996,rr=Math.sqrt(i/40)*cr*0.9;s+=`<circle cx="${cx+Math.cos(a)*rr}" cy="${cy+Math.sin(a)*rr}" r="${0.7*d.size}" fill="${mix(d.c1,'#3A2030',.3)}" opacity=".75"/>`;}  // fuzzy dome
+  return s;
+}
+function headNightQueen(d,cx,cy,open){ // 昙花 — large nocturnal star: many slender pure-white tepals radiating wide, reddish sepals behind
+  const len=27*d.size*(0.5+0.5*open),wid=5*d.size,n=12;let s='';
+  for(let i=0;i<n;i++){const a=d.twist+i*(360/n);s+=`<path d="M0 0 C ${wid*1.4} ${-len*0.5} ${wid*0.6} ${-len} 0 ${-len*1.05} C ${-wid*0.6} ${-len} ${-wid*1.4} ${-len*0.5} 0 0 Z" fill="${gref(mix(d.c1,'#6E5A40',.5))}" opacity=".55" transform="translate(${cx} ${cy}) rotate(${a+15})"/>`;}  // reddish outer sepals
+  for(let i=0;i<10;i++){const a=d.twist+i*(360/10);s+=`<path d="M0 0 C ${wid} ${-len*0.4} ${wid*0.5} ${-len*0.95} 0 ${-len} C ${-wid*0.5} ${-len*0.95} ${-wid} ${-len*0.4} 0 0 Z" fill="${gref(mix(d.c1,'#FFFDF8',.6))}" opacity=".95" transform="translate(${cx} ${cy}) rotate(${a})"/>`;}  // luminous white tepals
+  s+=`<circle cx="${cx}" cy="${cy}" r="${5*d.size}" fill="${cref('#F4EFD8')}"/>`;
+  for(let i=0;i<12;i++){const a=i*30*Math.PI/180;s+=`<line x1="${cx}" y1="${cy}" x2="${cx+Math.cos(a)*7*d.size}" y2="${cy+Math.sin(a)*7*d.size}" stroke="#E8DCA8" stroke-width=".7"/>`;}
+  return s;
+}
+function headStrelitzia(d,cx,cy,open){ // 鹤望兰 — bird-of-paradise: spiky orange sepals + blue tongue fanning from a horizontal green spathe
+  let s='';const bx=cx-14*d.size,by=cy;const sp=0.6+0.4*open;
+  s+=`<path d="M${bx} ${by} Q ${cx+16*d.size} ${by+4*d.size} ${cx+20*d.size} ${by-2*d.size}" stroke="#6E8A4A" stroke-width="${4*d.size}" fill="none" stroke-linecap="round"/>`;  // spathe boat
+  for(let i=0;i<4;i++){const ang=-20-i*22,r=22*d.size*sp;const a=ang*Math.PI/180;s+=`<path d="M${bx+4*d.size} ${by} L ${bx+4*d.size+Math.cos(a)*r} ${by+Math.sin(a)*r} L ${bx+4*d.size+Math.cos(a+0.13)*r*0.92} ${by+Math.sin(a+0.13)*r*0.92} Z" fill="${gref(d.c1)}" opacity=".95"/>`;}  // orange sepal spikes
+  for(let i=0;i<3;i++){const ang=-8-i*14,r=20*d.size*sp;const a=ang*Math.PI/180;s+=`<path d="M${bx+6*d.size} ${by} L ${bx+6*d.size+Math.cos(a)*r} ${by+Math.sin(a)*r} L ${bx+6*d.size+Math.cos(a+0.1)*r*0.9} ${by+Math.sin(a+0.1)*r*0.9} Z" fill="${gref(d.c2)}" opacity=".95"/>`;}  // blue tongue
+  return s;
+}
+function headGentian(d,cx,cy,open){ // 龙胆 — deep narrow upward 5-lobed trumpet, intense blue, pleated throat
+  const len=24*d.size*(0.5+0.5*open),w=9*d.size*(0.6+0.4*open);let s='';
+  s+=`<path d="M${cx-w*0.5} ${cy} C ${cx-w} ${cy-len*0.5} ${cx-w*0.7} ${cy-len} ${cx-w*0.55} ${cy-len} L ${cx+w*0.55} ${cy-len} C ${cx+w*0.7} ${cy-len} ${cx+w} ${cy-len*0.5} ${cx+w*0.5} ${cy} Z" fill="${gref(d.c1)}"/>`;  // trumpet body
+  for(let i=0;i<5;i++){const px=cx+(i-2)*w*0.42;s+=`<path d="M${px} ${cy-len} q ${w*0.18} ${-w*0.5} 0 ${-w*0.7} q ${-w*0.18} ${w*0.2} 0 ${w*0.7} Z" fill="${gref(mix(d.c1,d.c2,.5))}" opacity=".95"/>`;}  // 5 pointed lobes
+  for(let i=0;i<6;i++){s+=`<line x1="${cx-w*0.4+i*w*0.16}" y1="${cy-2}" x2="${cx-w*0.5+i*w*0.18}" y2="${cy-len*0.85}" stroke="${mix(d.c1,'#fff',.4)}" stroke-width=".6" opacity=".5"/>`;}  // pleats
+  return s;
+}
+function headSnowLotus(d,cx,cy,open){ // 雪莲 — dense low rosette of pale woolly bracts hugging a domed center, alpine
+  let s='';const rings=3,maxL=18*d.size*(0.55+0.45*open),wid=6*d.size;
+  for(let L=rings;L>=0;L--){const lr=0.4+0.6*L/rings,n=7+L*2,col=mix(d.c1,'#EEF0EC',(rings-L)/rings*0.4),rot=L*16;
+    for(let i=0;i<n;i++){const tf=`translate(${cx} ${cy}) rotate(${rot+i*(360/n)})`,len=maxL*lr;
+      s+=`<path d="M0 0 C ${wid} ${-len*0.3} ${wid*0.5} ${-len} 0 ${-len} C ${-wid*0.5} ${-len} ${-wid} ${-len*0.3} 0 0 Z" fill="${gref(col)}" opacity="${0.92-(rings-L)*0.05}" transform="${tf}"/>`;
+      s+=`<path d="M0 -${len*0.3} L0 -${len*0.85}" stroke="#fff" stroke-width="${0.5*d.size}" opacity=".4" transform="${tf}"/>`;}}  // woolly fiber
+  s+=`<circle cx="${cx}" cy="${cy}" r="${5*d.size}" fill="${cref(mix('#C8B86A',d.c2,.4))}"/>`;return s;
+}
+function headVictoria(d,cx,cy,open){ // 王莲 — giant waterlily: many many narrow concentric pointed petals, wide flat platform
+  const len=22*d.size*(0.5+0.5*open),wid=5*d.size;let s='';
+  for(let L=0;L<Math.max(4,d.layers+2);L++){const lr=1-L*0.14,n=d.petals+6-L,col=mix(L%2?d.c1:d.c2,'#fff',L*0.07),rot=L*(180/(d.petals+6));
+    for(let i=0;i<n;i++)s+=`<path d="M0 0 C ${wid*lr} ${-len*lr*0.25} ${wid*lr*0.5} ${-len*lr} 0 ${-len*lr} C ${-wid*lr*0.5} ${-len*lr} ${-wid*lr} ${-len*lr*0.25} 0 0 Z" fill="${gref(col)}" opacity="${0.93-L*0.05}" transform="translate(${cx} ${cy}) rotate(${rot+i*(360/n)})"/>`;}
+  s+=`<circle cx="${cx}" cy="${cy}" r="${4*d.size}" fill="${cref(mix(d.c1,'#C83A5A',.3))}"/>`;return s;
+}
+function headBlueRose(d,cx,cy,open){ // 蓝玫瑰 — classic spiral rose but tighter, more petals, mystic blue (reuses rose geometry refined)
+  let s='';const layers=6;for(let L=layers;L>=0;L--){const rr=(2.6+L*2.9)*d.size*(0.5+0.5*open),n=3+L,col=mix(d.c1,d.c2,L/layers*0.7);
+    for(let i=0;i<n;i++){const a=(i*(360/n)+L*22)*Math.PI/180;
+      s+=`<path d="M${cx} ${cy} Q ${cx+Math.cos(a)*rr} ${cy+Math.sin(a)*rr-rr*0.42} ${cx+Math.cos(a)*rr*1.08} ${cy+Math.sin(a)*rr*1.08} Q ${cx+Math.cos(a+0.46)*rr} ${cy+Math.sin(a+0.46)*rr} ${cx} ${cy} Z" fill="${gref(col)}" opacity=".93"/>`;}}
+  return s;
+}
+function headCrownImperial(d,cx,cy,open){ // 帝王贝母 — whorl of downward bells under a topknot crown of leaves
+  let s='';const n=6,bw=7*d.size,bh=13*d.size,sc=0.7+0.3*open;
+  for(let i=0;i<n;i++){const ang=i*(360/n),a=ang*Math.PI/180,bx=cx+Math.cos(a)*15*d.size,by=cy+Math.abs(Math.sin(a))*3*d.size+3*d.size;
+    s+=`<path d="M${bx-bw*sc} ${by} Q ${bx-bw*sc} ${by+bh} ${bx} ${by+bh*1.1} Q ${bx+bw*sc} ${by+bh} ${bx+bw*sc} ${by} Q ${bx} ${by-bh*0.2} ${bx-bw*sc} ${by} Z" fill="${gref(i%2?d.c2:d.c1)}" opacity=".95"/>`;
+    s+=`<line x1="${cx}" y1="${cy-4}" x2="${bx}" y2="${by}" stroke="#6E8A4A" stroke-width="1"/>`;}
+  for(let i=0;i<7;i++){const a=(i*(360/7)-90)*Math.PI/180;s+=`<path d="M${cx} ${cy-6*d.size} Q ${cx+Math.cos(a)*4} ${cy-16*d.size} ${cx+Math.cos(a)*8*d.size} ${cy-20*d.size}" stroke="#7BA04A" stroke-width="${2*d.size}" fill="none" stroke-linecap="round"/>`;}  // leafy crown topknot
+  return s;
+}
+function headCornflower(d,cx,cy,open){ // 矢车菊 — ring of deeply fringed, spiky tubular florets, open airy center
+  const len=20*d.size*(0.5+0.5*open),n=10;let s='';
+  for(let i=0;i<n;i++){const a=d.twist+i*(360/n),outer=i%2===0;const ln=outer?len:len*0.6;
+    s+=`<path d="M0 0 L ${3*d.size} ${-ln*0.6} L ${1.6*d.size} ${-ln} L ${3*d.size} ${-ln} L 0 ${-ln*0.86} L ${-3*d.size} ${-ln} L ${-1.6*d.size} ${-ln} L ${-3*d.size} ${-ln*0.6} Z" fill="${gref(outer?d.c1:d.c2)}" opacity=".94" transform="translate(${cx} ${cy}) rotate(${a})"/>`;}  // fringed jagged floret
+  s+=`<circle cx="${cx}" cy="${cy}" r="${4*d.size}" fill="${cref(mix(d.c1,'#2A3A6A',.4))}"/>`;
+  for(let i=0;i<6;i++){const a=i*60*Math.PI/180;s+=`<circle cx="${cx+Math.cos(a)*2.5*d.size}" cy="${cy+Math.sin(a)*2.5*d.size}" r="${0.9*d.size}" fill="${mix(d.c2,'#fff',.4)}"/>`;}
+  return s;
+}
+function headFoxglove(d,cx,cy,open){ // 毛地黄 — tall one-sided spire of pendulous spotted tubular bells
+  let s='';const n=7;const tw=8*d.size,th=12*d.size;
+  for(let i=0;i<n;i++){const t=i/(n-1),by=cy-i*7*d.size,bx=cx+(t-0.5)*6*d.size,sc=(1.1-t*0.55)*(0.7+0.3*open),col=mix(d.c1,d.c2,t*0.5);
+    s+=`<path d="M${bx} ${by} q ${-tw*sc} ${th*sc*0.15} ${-tw*sc*0.85} ${th*sc} q ${tw*sc*0.85} ${th*sc*0.4} ${tw*sc*1.7} 0 q ${tw*sc*0.15} ${-th*sc*0.85} ${-tw*sc*0.85} ${-th*sc} Z" fill="${gref(col)}" opacity=".93" transform="rotate(${20-t*30} ${bx} ${by})"/>`;
+    if(t>0.3)for(let k=0;k<3;k++)s+=`<circle cx="${bx-tw*sc*0.3+k*tw*sc*0.3}" cy="${by+th*sc*0.6}" r="${0.8*d.size*sc}" fill="${mix('#fff',d.c1,.2)}" opacity=".8"/>`;}  // throat spots
+  return s;
+}
+function headThistle(d,cx,cy,open){ // 蓟花 — spiky purple pompom of bristle filaments atop a cross-hatched spiny bulb
+  let s='';const cr=7*d.size;const n=26;const len=14*d.size*(0.6+0.4*open);
+  for(let i=0;i<n;i++){const a=(d.twist+i*(360/n))*Math.PI/180-Math.PI;if(Math.sin(a)>0.2)continue;s+=`<line x1="${cx+Math.cos(a)*cr*0.5}" y1="${cy-cr*0.3+Math.sin(a)*cr*0.3}" x2="${cx+Math.cos(a)*len}" y2="${cy-cr*0.3+Math.sin(a)*len*0.9-len*0.4}" stroke="${gref(i%2?d.c1:d.c2)}" stroke-width="${1.4*d.size}" stroke-linecap="round" opacity=".9"/>`;}  // bristles
+  s+=`<path d="M${cx-cr} ${cy} Q ${cx-cr} ${cy+cr*1.4} ${cx} ${cy+cr*1.5} Q ${cx+cr} ${cy+cr*1.4} ${cx+cr} ${cy} Q ${cx} ${cy-cr*0.3} ${cx-cr} ${cy} Z" fill="${gref(mix(d.c1,'#4A6A3A',.5))}"/>`;  // spiny bulb
+  for(let i=0;i<4;i++)for(let k=0;k<3;k++)s+=`<line x1="${cx-cr*0.7+i*cr*0.46}" y1="${cy+cr*0.2}" x2="${cx-cr*0.5+k*cr*0.5}" y2="${cy+cr*1.3}" stroke="${shade(d.c1,.4)}" stroke-width=".5" opacity=".4"/>`;  // cross-hatch
+  return s;
+}
+function headColumbine(d,cx,cy,open){ // 耧斗菜 — 5 spurred petals: each a rounded blade with a long nectar spur trailing back
+  const n=5,len=15*d.size*(0.55+0.45*open),spur=12*d.size;let s='';
+  for(let i=0;i<n;i++){const a=d.twist+i*(360/n),rad=a*Math.PI/180;
+    s+=`<path d="M0 0 C ${5*d.size} ${-len*0.4} ${5*d.size} ${-len} 0 ${-len} C ${-5*d.size} ${-len} ${-5*d.size} ${-len*0.4} 0 0 Z" fill="${gref(d.c2)}" opacity=".95" transform="translate(${cx} ${cy}) rotate(${a})"/>`;  // blade
+    s+=`<path d="M${cx} ${cy} q ${Math.cos(rad-Math.PI/2)*spur*0.5} ${Math.sin(rad-Math.PI/2)*spur*0.5+spur*0.3} ${Math.cos(rad-Math.PI/2)*spur} ${Math.sin(rad-Math.PI/2)*spur}" stroke="${gref(d.c1)}" stroke-width="${2.4*d.size}" fill="none" stroke-linecap="round" opacity=".9"/>`;}  // trailing spur
+  s+=`<circle cx="${cx}" cy="${cy}" r="${3*d.size}" fill="${cref(mix(d.c2,'#F4E08A',.5))}"/>`;return s;
+}
+function headEdelweiss(d,cx,cy,open){ // 雪绒花 — star of woolly white felted bracts radiating flat, tiny yellow floret cluster
+  const n=Math.max(7,Math.min(9,d.petals-4)),len=18*d.size*(0.55+0.45*open),wid=4.5*d.size;let s='';
+  for(let i=0;i<n;i++){const a=d.twist+i*(360/n);s+=`<path d="M0 0 C ${wid} ${-len*0.3} ${wid*0.5} ${-len*0.95} 0 ${-len} C ${-wid*0.5} ${-len*0.95} ${-wid} ${-len*0.3} 0 0 Z" fill="${gref(mix(d.c1,'#F4F2EC',.4))}" opacity=".94" transform="translate(${cx} ${cy}) rotate(${a})"/>`;
+    s+=`<path d="M0 -${len*0.2} L0 -${len*0.9}" stroke="#fff" stroke-width="${0.6*d.size}" opacity=".5" transform="translate(${cx} ${cy}) rotate(${a})"/>`;}  // felted fiber
+  for(let i=0;i<7;i++){const a=i*(360/7)*Math.PI/180,rr=3.5*d.size;s+=`<circle cx="${cx+Math.cos(a)*rr}" cy="${cy+Math.sin(a)*rr}" r="${1.5*d.size}" fill="#E8C84A"/>`;}
+  return s;
+}
+function headGhostPipe(d,cx,cy,open){ // 水晶兰 — translucent nodding single waxy bell on a pale ghostly stalk, no green
+  const bw=8*d.size,bh=16*d.size*(0.6+0.4*open);let s='';
+  s+=`<path d="M${cx-bw} ${cy-bh*0.3} C ${cx-bw} ${cy+bh*0.4} ${cx-bw*0.6} ${cy+bh*0.7} ${cx} ${cy+bh*0.72} C ${cx+bw*0.6} ${cy+bh*0.7} ${cx+bw} ${cy+bh*0.4} ${cx+bw} ${cy-bh*0.3} C ${cx+bw*0.5} ${cy-bh*0.5} ${cx-bw*0.5} ${cy-bh*0.5} ${cx-bw} ${cy-bh*0.3} Z" fill="${gref(mix(d.c1,'#fff',.35))}" opacity=".9"/>`;  // waxy nodding bell
+  for(let i=0;i<4;i++)s+=`<line x1="${cx-bw*0.5+i*bw*0.33}" y1="${cy-bh*0.3}" x2="${cx-bw*0.4+i*bw*0.3}" y2="${cy+bh*0.5}" stroke="${mix(d.c2,'#fff',.3)}" stroke-width=".6" opacity=".5"/>`;  // translucent ribs
+  s+=`<ellipse cx="${cx}" cy="${cy-bh*0.36}" rx="${bw*0.85}" ry="${bw*0.3}" fill="${mix(d.c2,'#E8E0F0',.4)}" opacity=".7"/>`;return s;
+}
+const HEADS={daisy:headDaisy,tulip:headTulip,bellflower:headBell,poppy:headPoppy,lotus:headLotus,clover:headClover,lavender:headLavender,rose:headRose,orchid:headOrchid,moonflower:headMoonflower,breath:headBreath,
+  sunflower:headSunflower,dahlia:headDahlia,camellia:headCamellia,iris:headIris,
+  // every plantable species now has its own bespoke silhouette — no colour-swap clones (#flower-shapes)
+  peony:headPeony,hibiscus:headHibiscus,marigold:headMarigold,anemone:headAnemone,
+  firelily:headFireLily,aurora:headAurora,protea:headProtea,
+  // plus-track epic blooms
+  magnolia:headMagnolia,ranunculus:headRanunculus,gardenia:headGardenia,freesia:headFreesia,zinnia:headZinnia,cosmos:headCosmos,
+  begonia:headBegonia,azalea:headAzalea,wisteria:headWisteria,jasmine:headJasmine,plumeria:headPlumeria,lily:headLily,
+  // achievement + sleep moon variants (moons keep the moonflower silhouette by design — they ARE the moon bloom, recoloured by phase)
+  nightqueen:headNightQueen,moon_silver:headMoonflower,moon_violet:headMoonflower,moon_blood:headMoonflower,
+  // achievement blooms — each its own bespoke shape
+  strelitzia:headStrelitzia,gentian:headGentian,snowlotus:headSnowLotus,victoria:headVictoria,lycoris:headSpiderLily,bluerose:headBlueRose,crownimperial:headCrownImperial,
+  cornflower:headCornflower,foxglove:headFoxglove,thistle:headThistle,columbine:headColumbine,edelweiss:headEdelweiss,ghostpipe:headGhostPipe};
+
+function flowerSVG(d,{size=120,grow=1,sway=false,stage=null}={}){
+  const cx=50,cy=58;
+  // open a fresh gradient registry for this render — every petal/center fill becomes a shaded gradient
+  _grads={U:_uid++,seq:0,defs:'',map:{},sat:SAT_TIER[d.rare]||0};
+  // staged lifecycle: stage 0..1 drives shoot -> closed bud -> bloom that cracks open in the back half
+  let open=grow,headScale=1,stemFrac=1,phase='full';
+  if(stage!==null){
+    const s=Math.max(0,Math.min(1,stage));
+    stemFrac=0.4+0.6*Math.min(1,s/0.45);          // stalk extends through the first half
+    if(s<0.6){phase='shoot';}                          // seed → shoot → leaves unfurl (labels @ 0/.16/.4)
+    else if(s<0.78){phase='bud';open=(s-0.6)/0.18;}    // a bud forms (label @ .62)
+    else{phase='head';const t=(s-0.78)/0.22;open=Math.min(1,0.35+t*0.65);headScale=0.6+0.4*t;}  // swells (.82) → cracks open to full bloom (1)
+  }
+  const sh=d.stemH*stemFrac;
+  // stem (lavender/bell get taller straighter stalks; lycoris is leafless by lore — 花叶不相见)
+  const tall=d.species==='lavender'||d.species==='bellflower';
+  const leafless=d.species==='lycoris';
+  let stem=`<path d="M${cx} ${cy} C ${cx-2} ${cy+sh*0.5} ${cx+2} ${cy+sh*0.7} ${cx} ${cy+sh}" stroke="#7C8A63" stroke-width="${(leafless?1.5:2.2)*d.size}" fill="none" stroke-linecap="round"/>`;
+  if(d.leaf&&!leafless)stem+=`<path d="M${cx} ${cy+sh*0.55} C ${cx+12} ${cy+sh*0.4} ${cx+15} ${cy+sh*0.7} ${cx+4} ${cy+sh*0.75} Z" fill="#8FA081" opacity=".9"/>`;
+  if(d.leaf&&tall&&!leafless)stem+=`<path d="M${cx} ${cy+sh*0.72} C ${cx-12} ${cy+sh*0.58} ${cx-15} ${cy+sh*0.85} ${cx-4} ${cy+sh*0.9} Z" fill="#8FA081" opacity=".8"/>`;
+  let inner;
+  if(phase==='full'||phase==='head'){
+    const raw=(HEADS[d.species]||headDaisy)(d,cx,cy,open);
+    inner=headScale>=0.999?raw:`<g transform="translate(${cx} ${cy}) scale(${headScale}) translate(${-cx} ${-cy})">${raw}</g>`;
+  }else if(phase==='bud'){
+    // closed bud: a teardrop in the flower's own color, wrapped by two green sepals, swelling with `open`
+    const bh=(11+7*open)*d.size,bw=(5+2.5*open)*d.size,ty=cy-bh;
+    inner=`<path d="M${cx} ${cy} C ${cx-bw} ${cy-bh*0.5} ${cx-bw*0.7} ${ty} ${cx} ${ty} C ${cx+bw*0.7} ${ty} ${cx+bw} ${cy-bh*0.5} ${cx} ${cy} Z" fill="${gref(d.c1)}"/>`+
+          `<path d="M${cx} ${cy+1} C ${cx-bw*1.1} ${cy-bh*0.35} ${cx-bw*0.6} ${cy-bh*0.6} ${cx-1} ${cy-bh*0.45} Z" fill="#8FA081" opacity=".95"/>`+
+          `<path d="M${cx} ${cy+1} C ${cx+bw*1.1} ${cy-bh*0.35} ${cx+bw*0.6} ${cy-bh*0.6} ${cx+1} ${cy-bh*0.45} Z" fill="#9DAE8C" opacity=".95"/>`;
+  }else{
+    // young shoot: two small leaves curling off the growing tip
+    inner=`<path d="M${cx} ${cy+2} C ${cx-9} ${cy-3} ${cx-11} ${cy+6} ${cx-1} ${cy+7} Z" fill="#8FA081" opacity=".95"/>`+
+          `<path d="M${cx} ${cy+2} C ${cx+9} ${cy-3} ${cx+11} ${cy+6} ${cx+1} ${cy+7} Z" fill="#9DAE8C" opacity=".95"/>`+
+          `<circle cx="${cx}" cy="${cy+1}" r="${1.6*d.size}" fill="#A7B892"/>`;
+  }
+  const head=inner;
+  // pale blooms (jasmine, gardenia, edelweiss, ghost pipe, snow lotus…) would melt into a cream/white
+  // background. A soft blur shadow isn't enough on near-white petals, so we trace a crisp "sticker" outline:
+  // dilate the bloom's own alpha silhouette and fill the ring with a soft sage-taupe, then add a faint blur
+  // shadow under it for depth. Alpha-based → hugs whatever the species actually draws, no per-species hacks.
+  // Works on ANY backdrop — picker cards, the garden, the rasterized share card, even pure white (#pale-contour).
+  const paleC=(phase==='full'||phase==='head')&&isPaleBloom(d);
+  if(paleC&&_grads){const r=(0.9*d.size).toFixed(2),bl=(0.6*d.size).toFixed(2);
+    _grads.defs+=`<filter id="pale${_grads.U}" x="-35%" y="-35%" width="170%" height="170%">`+
+      `<feDropShadow dx="0" dy="0" stdDeviation="${(1.3*d.size).toFixed(2)}" flood-color="#7A6E5A" flood-opacity="0.45" result="sh"/>`+
+      `<feMorphology in="SourceAlpha" operator="dilate" radius="${r}" result="thick"/>`+
+      `<feFlood flood-color="#9C9176"/><feComposite in2="thick" operator="in" result="ring"/>`+
+      `<feGaussianBlur in="ring" stdDeviation="${bl}" result="softring"/>`+
+      `<feMerge><feMergeNode in="sh"/><feMergeNode in="softring"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;}
+  const headWrap=paleC?`<g filter="url(#pale${_grads?_grads.U:0})">${head}</g>`:head;
+  const bloomed=(phase==='full'||(phase==='head'&&headScale>=0.999));
+  const glow=d.glow&&grow>=1&&bloomed?`<circle cx="${cx}" cy="${cy}" r="${26*d.size}" fill="${d.c1}" opacity=".14"/>`:'';
+  // soft ground shadow grounds the plant instead of floating it
+  const groundY=cy+sh+1,shW=11*d.size*(0.6+0.4*open);
+  const ground=`<ellipse cx="${cx}" cy="${groundY}" rx="${shW}" ry="${shW*0.26}" fill="#3A3024" opacity=".12"/>`;
+  const defs=_grads.defs?`<defs>${_grads.defs}</defs>`:'';
+  _grads=null;
+  const swayG=sway?' class="sway"':'';
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 110" width="${size}" height="${size*1.1}">${defs}${ground}${glow}${stem}<g${swayG}>${headWrap}</g></svg>`;
+}
+function Flower({d,size=120,grow=1,sway=false,style,withered=false,stage=null,fx=true}){
+  const svg=<span style={{display:'inline-flex'}} dangerouslySetInnerHTML={{__html:flowerSVG(d,{size,grow:withered?0.45:grow,sway:withered?false:sway,stage})}}/>;
+  // rarity-gated effects: dazzle is an earned reward. Suppress entirely on withered / unopened / fx=false.
+  const bloomed=stage===null?grow>=0.6:stage>=0.78;
+  const tier=withered||!fx||!bloomed?'common':(d.rare||'common');
+  if(tier==='common')return <span style={{display:'inline-flex',...(withered?{filter:'grayscale(1) brightness(.82) contrast(.85) opacity(.6)'}:{}),...style}}>{svg}</span>;
+  const hi=tier==='epic'||tier==='legendary';   // epic & legendary share the top-strength dazzle
+  // shimmer on rare+, iris hue-flow only on legendary (the crown effect), breathe on uncommon+
+  const cls='fx'+(tier==='rare'||hi?' fx-shimmer':'')+(tier==='legendary'?' fx-iris':'')+(tier!=='common'?' fx-breathe':'');
+  // ambient motes — slow rising light points; scale up with rarity
+  const moteN=tier==='legendary'?11:tier==='epic'?8:tier==='rare'?5:tier==='uncommon'?2:d.glow?2:0;
+  const motes=Array.from({length:moteN}).map((_,i)=>{const s=2+(i%3);return <span key={i} className="fx-mote" style={{left:(10+i*8)+'%',bottom:(24+(i%4)*13)+'%',width:s,height:s,background:i%2?'#FFF4CC':mix(d.c1,'#fff',.5),boxShadow:'0 0 6px 1px rgba(255,244,204,.95)',animationDuration:(3.4+i*0.5)+'s',animationDelay:(i*0.5)+'s'}}/>;});
+  // halo — upgraded glow ring behind the bloom for rare+ / glowing species; brighter & larger at higher tiers
+  const haloD=Math.round(size*(tier==='legendary'?1.05:tier==='epic'?1.0:0.95));
+  const haloA=tier==='legendary'?'9c':tier==='epic'?'80':'55';
+  const halo=(tier==='rare'||hi||d.glow)?<span className="fx-halo" style={{width:haloD,height:haloD,background:`radial-gradient(circle,${vivid(d.c1,0.6,0)}${haloA},transparent 70%)`,animationDuration:tier==='legendary'?'3.2s':tier==='epic'?'3.6s':'4.4s'}}/>:null;
+  // bespoke signature effect — lore-driven, layered ON TOP of the generic dazzle for landmark species (#flower-signature-fx)
+  const sig=SIGNATURE_FX(d,size);
+  return <span className={cls+(sig.cls||'')} style={{...style}}>{sig.behind}{halo}{svg}{motes}{sig.front}</span>;
+}
+/* per-species bespoke overlays. Returns {behind,front,cls}. Only landmark blooms qualify; others get {} (generic dazzle only). */
+function SIGNATURE_FX(d,size){
+  const sp=d.species;
+  if(sp==='lycoris'){   // 彼岸花 — spectral red underglow (黄泉幽光) + souls drifting up off the recurved petals
+    const behind=<span className="fx-spectral" style={{width:Math.round(size*0.92),height:Math.round(size*0.92),background:`radial-gradient(circle,#FF2A2A 0%,#C81E3A66 42%,transparent 72%)`}}/>;
+    const souls=Array.from({length:6}).map((_,i)=><span key={i} className="fx-soul" style={{left:(26+i*9)+'%',bottom:(46+(i%3)*9)+'%',width:3+(i%2)*1.5,height:6+(i%2)*2,background:'linear-gradient(180deg,#FF6B6B,#B81030)',boxShadow:'0 0 7px 1px rgba(255,70,70,.9)','--sx':((i%2?1:-1)*(5+i*2))+'px',animationDuration:(4.2+i*0.6)+'s',animationDelay:(i*0.7)+'s'}}/>);
+    return {behind,front:souls};
+  }
+  if(sp==='aurora'){    // 极光花 — a shifting iridescent curtain (the northern-lights bloom)
+    const behind=<span className="fx-aurora" style={{width:'104%',height:'104%',background:'linear-gradient(115deg,transparent 8%,#5BC8C088 30%,#9A7FD888 52%,#F09AC066 72%,transparent 92%)'}}/>;
+    return {behind};
+  }
+  if(sp==='nightqueen'){ // 昙花一现 — a cool pale lumen that swells like a single held breath in the dark
+    const behind=<span className="fx-lumen" style={{width:Math.round(size*0.98),height:Math.round(size*0.98),background:'radial-gradient(circle,#FBF7E8 0%,#E8DCA877 46%,transparent 72%)'}}/>;
+    return {behind};
+  }
+  if(sp==='ghostpipe'){ // 水晶兰 — ghostly translucent moonlit glow, faint and cold
+    const behind=<span className="fx-lumen" style={{width:Math.round(size*0.9),height:Math.round(size*0.9),background:'radial-gradient(circle,#E8F0FF 0%,#C8D4E866 48%,transparent 74%)',animationDuration:'6.5s'}}/>;
+    return {behind};
+  }
+  if(sp==='firelily'){  // 火百合 — a hot flickering core + embers rising off the blazing petals
+    const behind=<span className="fx-flame" style={{width:Math.round(size*0.8),height:Math.round(size*0.8),background:'radial-gradient(circle,#FFD24A 0%,#FF6B1E88 40%,#E83A1066 60%,transparent 76%)'}}/>;
+    const embers=Array.from({length:7}).map((_,i)=><span key={i} className="fx-ember" style={{left:(30+i*7)+'%',bottom:(48+(i%3)*8)+'%',width:2+(i%2)*1.5,height:2+(i%2)*1.5,background:i%2?'#FFD24A':'#FF7A2A',boxShadow:'0 0 6px 1px rgba(255,150,40,.95)','--ex':((i%2?1:-1)*(4+i*1.5))+'px',animationDuration:(2.6+i*0.4)+'s',animationDelay:(i*0.4)+'s'}}/>);
+    return {behind,front:embers};
+  }
+  if(sp==='snowlotus'){ // 雪莲 — drifting frost crystals + a cold alpine shimmer
+    const behind=<span className="fx-lumen" style={{width:Math.round(size*0.86),height:Math.round(size*0.86),background:'radial-gradient(circle,#EAF4FF 0%,#BcD4F055 50%,transparent 74%)',animationDuration:'5.5s'}}/>;
+    const frost=Array.from({length:7}).map((_,i)=><span key={i} className="fx-frost" style={{left:(20+i*9)+'%',top:(8+(i%3)*10)+'%',fontSize:(6+(i%2)*3)+'px',textShadow:'0 0 5px rgba(200,224,255,.9)','--fx':((i%2?1:-1)*(4+i))+'px',animationDuration:(3.6+i*0.5)+'s',animationDelay:(i*0.5)+'s'}}>❄</span>);
+    return {behind,front:frost};
+  }
+  if(sp==='bluerose'){  // 蓝玫瑰 — an impossible-blue mystic sheen rotating slowly behind the spiral
+    const behind=<span className="fx-mystic" style={{width:'108%',height:'108%',background:'conic-gradient(from 0deg,#3A5BC8aa,#7B6FD8aa,#5BB0E8aa,#3A5BC8aa)'}}/>;
+    return {behind};
+  }
+  if(sp==='moon_blood'){ // 血月华 — a brooding crimson lunar halo (the rarest sleep moon)
+    const behind=<span className="fx-spectral" style={{width:Math.round(size*0.96),height:Math.round(size*0.96),background:'radial-gradient(circle,#E85A6A 0%,#B0304066 46%,transparent 72%)',animationDuration:'4.6s'}}/>;
+    return {behind};
+  }
+  return {};
+}
+const RARE_L_EN={common:'Common',uncommon:'Uncommon',rare:'Rare',epic:'Epic',legendary:'Legendary'};
+const RARE_L_ZH={common:'普通',uncommon:'罕见',rare:'稀有',epic:'史诗',legendary:'传说'};
+const RARE_C={common:'var(--ink-3)',uncommon:'var(--m-sage)',rare:'var(--accent)',epic:'var(--m-lav)',legendary:'#C9A24B'};
+const RARE=new Proxy({},{get:(_,k)=>({l:(LANG==='en'?RARE_L_EN:RARE_L_ZH)[k],c:RARE_C[k]})});
+window.__engineReady=true;
+/* ===== Bloom 官网 App ===== */
+const {useState,useEffect,useRef,useMemo}=React;
+
+/* ---------- 双语文案 ---------- */
+const I18N={
+  nav_mechanic:['玩法','How it works'],nav_flowers:['花图鉴','Flowers'],
+  nav_together:['共享花园','Together'],nav_download:['获取 App','Get the app'],
+  hero_eyebrow:['专注 · 正念 · 休息','FOCUS · MINDFULNESS · REST'],
+  hero_title:['把专注，\n种成一座花园','Grow a garden\nfrom your focus'],
+  hero_lead:['设定一段专注，选一个意图，一朵花便开始生长。留到最后，它永远绽放；中途离开，它就此枯萎。每一次专注，都长出一朵永不重现的花。','Set a focus session, choose an intention, and a flower begins to grow. Stay to the end and it blooms forever; leave early and it withers. Every session grows one flower that will never exist again.'],
+  hero_cta1:['获取 App','Get the app'],hero_cta2:['看看玩法','See how it works'],
+  hero_note:['iOS 版即将上架 · 现在订阅抢先体验','Coming soon on iOS · Subscribe for early access'],
+  hero_caption:['你给的每一分钟，我都记得。','I remember every minute you gave me.'],
+
+  tour_eyebrow:['一款 App，六种打开方式','ONE APP · SIX WAYS IN'],
+  tour_title:['你的每一种状态，\n都有一朵花在等它','A flower for every\nway you show up'],
+  tour_lead:['专注、正念、睡眠——每一段用心的时间，都会长成花园里的一朵花。这就是产品里真实的样子。','Focus, breathe, or rest. Every mindful stretch of time grows into a flower in your garden. This is what the app actually looks like.'],
+  tour_focus_t:['专注','Focus'],
+  tour_focus_d:['拨动圆环设定时长，选一个意图，看花在中央生长。留到结束，它永远绽放。','Dial in a duration, pick an intention, and watch a flower grow at the center. Stay to the end and it blooms for good.'],
+  tour_mindful_t:['正念','Mindfulness'],
+  tour_mindful_d:['跟着呼吸节奏一呼一吸，几个循环后收获一朵专属正念之花。','Breathe in and out with a guided rhythm. A few cycles earns a flower that is uniquely yours.'],
+  tour_sleep_t:['睡眠','Sleep'],
+  tour_sleep_d:['睡前种下一朵月光花，记录就寝与起床。连续的好眠会长成夜空里的稀有花。','Plant a moonflower before bed and track your nights. A steady sleep streak grows rare blooms under the night sky.'],
+  tour_garden_t:['花园','Garden'],
+  tour_garden_d:['所有种下的花汇成一片花田，按时间铺开。布置你的花园，解锁场景与花盆。','Every flower you grow gathers into one plot, laid out over time. Arrange it, and unlock new scenes and pots.'],
+  tour_together_t:['一起种','Together'],
+  tour_together_d:['和朋友共建一座花园，各自的专注汇入同一片花田，一起养出稀有花。','Build a shared garden with friends. Everyone’s focus feeds the same plot, growing rare blooms together.'],
+  tour_insights_t:['洞察','Insights'],
+  tour_insights_d:['看清你的专注时长、活跃时段与花种分布——数据也开成了花。','See your focus hours, active times and species mix. Even the data blooms.'],
+
+  nav_tour:['产品','Tour'],
+
+  mech_eyebrow:['核心机制','THE CORE BET'],
+  mech_title:['留下，才开花','Stay, and it blooms'],
+  mech_lead:['专注开始的那一刻，你下了一个赌注。全程留在这里，花会一路长到盛放，永远留在你的花园；中途切走超过 20 秒，它就枯成一朵灰花——照样入园，提醒你那段没走完的时光。','The moment you start, you make a bet. Stay the whole way and the flower grows to full bloom, kept in your garden forever. Slip away for more than 20 seconds and it withers to gray — still planted, a quiet record of the time you didn’t finish.'],
+  mech_stay:['全程留下','Stayed'],mech_leave:['中途离开','Left'],
+  mech_stay_d:['盛放 · 永久收藏','Full bloom · kept'],
+  mech_leave_d:['枯萎 · 灰花入园','Withered · gray'],
+
+  f1_eyebrow:['金币经济','EARN & SPEND'],
+  f1_title:['专注结出金币，\n点亮整座花园','Focus mints coins\nthat light your garden'],
+  f1_lead:['每一次专注、正念或睡眠，都会按时长结出金币。用它解锁新的花朵、换一片花园背景、升级花盆，或投进抽奖，邂逅只能抽到的稀有花。','Every focus, mindful, or sleep session mints coins by the minute. Spend them to unlock new flowers, swap your garden backdrop, upgrade your pots, or roll the gacha for blooms you can only win.'],
+  f1_earn:['赚取','EARN'],f1_spend:['消费','SPEND'],
+  f1_e1:['专注','Focus'],f1_e1d:['按分钟结算 · 收益最高','by the minute · top yield'],
+  f1_e2:['正念','Mindful'],f1_e2d:['每轮呼吸都算数','every breath counts'],
+  f1_e3:['睡眠','Sleep'],f1_e3d:['作息达标的每日奖励','a daily rest bonus'],
+  f1_s1:['解锁花朵','Unlock flowers'],f1_s1d:['150 起','from ◍150'],
+  f1_s2:['花园背景','Garden scenes'],f1_s2d:['换一片风景','swap the view'],
+  f1_s3:['升级花盆','Upgrade pots'],f1_s3d:['陶土到鎏金','clay to gilt'],
+  f1_s4:['抽奖','Gacha roll'],f1_s4d:['专属稀有花','exclusive blooms'],
+
+  f2_eyebrow:['一整座花园','A WHOLE GARDEN'],
+  f2_title:['时光积成花田','Sessions become a meadow'],
+  f2_lead:['每一次专注都落进你的花园，摆成一片可打理的花田。没有两朵花完全相同——正如没有两段时光。翻看它们，就是翻看自己认真度过的日子。','Every session lands in your garden as a meadow you can tend. No two flowers are ever alike — nor any two hours. To browse them is to revisit the days you spent well.'],
+
+  codex_eyebrow:['花图鉴','THE FLOWER CODEX'],
+  codex_title:['六十余种花，等你养成','Over sixty species to grow'],
+  codex_lead:['从随手可得的雏菊，到只有里程碑才能解锁的传说之花。稀有度越高，绽放时的光泽越是耀眼——那是专注挣来的奖赏。','From the everyday daisy to legendary blooms unlocked only by milestones. The rarer the flower, the more radiant its bloom — a dazzle earned by focus.'],
+  codex_t_all:['全部','All'],codex_t_free:['免费','Free'],codex_t_rare:['稀有','Rare'],
+  codex_t_epic:['史诗','Epic'],codex_t_legendary:['传说','Legendary'],
+
+  tog_eyebrow:['共享花园','GROW TOGETHER'],
+  tog_title:['和朋友，\n种同一片花田','Grow one meadow\nwith friends'],
+  tog_lead:['把种好的花共享进小队花园，你们的专注小时数会一起累积、排出名次。当团队共同专注满 150 小时，一朵谁都买不到的彼岸花，为每个人绽放。','Share your finished flowers into a team meadow, where everyone’s focused hours add up and rank together. Reach 150 shared hours as a team and a Red Spider Lily — one no coins can buy — blooms for each of you.'],
+  tog_goal:['团队共种进度','Team goal'],
+  tog_members:['5 / 8 位园丁','5 / 8 gardeners'],
+
+  mile_eyebrow:['里程碑','MILESTONES'],
+  mile_title:['坚持，会被记住','Devotion, remembered'],
+  mile_lead:['连续的专注、累积的小时、共同的坚守——每一个里程碑，都换来一朵别处得不到的荣誉之花。','Streaks, accumulated hours, shared devotion — each milestone rewards you with an honour bloom found nowhere else.'],
+  mile_reward:['解锁','Unlocks'],
+
+  cta_title:['让今天的专注，\n开成一朵花','Let today’s focus\nbloom into a flower'],
+  cta_lead:['Bloom 正在打磨 iOS 版本。留下邮箱，上架第一时间通知你，并送上抢先体验。','Bloom is polishing its iOS release. Leave your email and we’ll tell you the moment it lands — with early access.'],
+  cta_ph:['你的邮箱','Your email'],cta_btn:['通知我','Notify me'],
+  cta_ok:['已收到 — 花开时我们会来敲门。','Got it — we’ll knock when it blooms.'],
+  soon_main:['即将上架','Coming soon'],soon_sub:['App Store · iOS','App Store · iOS'],
+
+  foot_tag:['一座由专注长成的花园。','A garden grown from focus.'],
+  foot_product:['产品','Product'],foot_company:['关于','Company'],foot_legal:['条款','Legal'],
+  foot_privacy:['隐私政策','Privacy'],foot_terms:['服务条款','Terms'],
+  foot_contact:['联系我们','Contact'],foot_about:['关于 Bloom','About Bloom'],
+  foot_rights:['保留所有权利。','All rights reserved.'],
+  foot_note:['Bloom 尚未上架，页面内容为产品预览。','Bloom is not yet released; this page is a product preview.'],
+};
+/* ---------- 语言 hook ---------- */
+function useLang(){
+  const [lang,setLang]=useState('en');
+  LANG=lang;  // 同步设置：花朵引擎的 SP_LABEL/RARE 代理在渲染期就读到正确语言（放 effect 里会慢一帧，导致花名不切换）
+  const t=k=>{const v=I18N[k];return v?v[lang==='zh'?0:1]:k;};
+  return {lang,setLang,t};
+}
+
+/* ---------- 图标 ---------- */
+function Ic({n,s=20}){
+  const P={
+    clock:'M12 7v5l3 2 M12 21a9 9 0 100-18 9 9 0 000 18z',
+    leaf:'M11 20A7 7 0 019 6c4-3 9-3 11-2 1 8-3 15-9 16z M9 6c0 8 2 11 2 14',
+    seed:'M12 3c3 3 4 7 0 11-4-4-3-8 0-11z M12 14v7 M8 18l4-2 4 2',
+    spark:'M12 3v4 M12 17v4 M3 12h4 M17 12h4 M6 6l2.5 2.5 M15.5 15.5L18 18 M18 6l-2.5 2.5 M8.5 15.5L6 18',
+    fire:'M12 3c1 4 5 5 5 10a5 5 0 11-10 0c0-2 1-3 2-4 0 2 1 3 2 3 1-1 0-6-1-9z',
+    together:'M9 11a3 3 0 100-6 3 3 0 000 6z M3 20a6 6 0 0112 0 M17 11a3 3 0 100-6 M15 20a6 6 0 016 0',
+    arrow:'M5 12h14 M13 6l6 6-6 6',
+    check:'M5 12l5 5 9-11',
+    dieflower:'M8 4.5h8a3.5 3.5 0 013.5 3.5v8a3.5 3.5 0 01-3.5 3.5h-8a3.5 3.5 0 01-3.5-3.5v-8a3.5 3.5 0 013.5-3.5z M12 10.7C10.6 9.7 10.6 7.7 12 7C13.4 7.7 13.4 9.7 12 10.7Z M12 13.3C10.6 14.3 10.6 16.3 12 17C13.4 16.3 13.4 14.3 12 13.3Z M10.7 12C9.7 10.6 7.7 10.6 7 12C7.7 13.4 9.7 13.4 10.7 12Z M13.3 12C14.3 10.6 16.3 10.6 17 12C16.3 13.4 14.3 13.4 13.3 12Z',
+    breath:'M12 21a9 9 0 100-18 9 9 0 000 18z M8 12c1.5-2 6.5-2 8 0 M8 12c1.5 2 6.5 2 8 0',
+    moon:'M20 14.5A8 8 0 019.5 4 7 7 0 1020 14.5z',
+    scene:'M3 17l5-6 4 4 3-4 6 6 M3 17V5h18v12H3z M8 9a1.5 1.5 0 100-3 1.5 1.5 0 000 3z',
+    pot:'M6 9h12l-1.5 10.5a1 1 0 01-1 .5H8.5a1 1 0 01-1-.5L6 9z M5 6h14v3H5z',
+    heart:'M12 20s-7-4.5-7-10a4 4 0 017-2.5A4 4 0 0119 10c0 5.5-7 10-7 10z',
+    globe:'M12 21a9 9 0 100-18 9 9 0 000 18z M3 12h18 M12 3c2.5 2.7 2.5 15.3 0 18 M12 3c-2.5 2.7-2.5 15.3 0 18',
+  };
+  return <svg className="ic" viewBox="0 0 24 24" width={s} height={s} stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">{P[n].split(' M').map((seg,i)=><path key={i} d={(i?'M':'')+seg}/>)}</svg>;
+}
+
+/* ---------- 花盆 Pot（移植原型：锥形盆身 + 盆沿 + 土口） ---------- */
+const POTS={
+  terracotta:{body:'linear-gradient(180deg,#C97A4E,#A95E38 52%,#8A4A2B)',rim:'linear-gradient(180deg,#D98B5E,#B96A40)',
+    rimEdge:'#7E4326',shade:'rgba(70,32,14,.34)',accent:null,glow:0},
+  glazed:{body:'linear-gradient(180deg,#D98E63,#B96B43 40%,#88472A)',rim:'linear-gradient(180deg,#F0B98E,#C67E52)',
+    rimEdge:'#8A4C2C',shade:'rgba(60,26,10,.30)',accent:'rgba(255,255,255,.32)',glow:.5},
+  porcelain:{body:'linear-gradient(180deg,#F3F5F7,#DFE7EC 46%,#BFD0DB)',rim:'linear-gradient(180deg,#FBFCFD,#D8E2EA)',
+    rimEdge:'#9DB4C4',shade:'rgba(70,96,120,.22)',accent:'#3F6E9C',glow:.4},
+  heirloom:{body:'linear-gradient(180deg,#3B3026,#2A2018 55%,#1C140D)',rim:'linear-gradient(180deg,#E7C77E,#B8923F)',
+    rimEdge:'#8A6A2E',shade:'rgba(0,0,0,.42)',accent:'#E7C77E',glow:.9}};
+const POT_SOIL={background:['radial-gradient(rgba(38,22,9,.36) .6px,transparent 1.1px)','radial-gradient(rgba(255,229,193,.16) .6px,transparent 1.1px)','linear-gradient(180deg,#5A3B22 0%,#3E2814 60%,#2A1A0C 100%)'].join(','),
+  backgroundSize:'6px 6px,8px 8px,100% 100%',boxShadow:'inset 0 3px 4px rgba(10,5,1,.55), inset 0 -2px 3px rgba(255,226,188,.12)'};
+function Pot({tier='terracotta',size=48,children}){
+  const p=POTS[tier]||POTS.terracotta;
+  const w=size,h=size*0.84,rim=Math.max(5,size*0.16),mouthW=w*0.9;
+  return <div style={{position:'relative',width:w,height:h,display:'flex',justifyContent:'center'}}>
+    <div style={{position:'absolute',bottom:-3,left:'50%',transform:'translateX(-50%)',width:w*0.86,height:8,borderRadius:'50%',background:'radial-gradient(ellipse,rgba(8,4,1,.42),transparent 72%)'}}/>
+    <div style={{position:'absolute',bottom:0,width:w,height:h-rim*0.5,background:p.body,clipPath:'polygon(7% 0,93% 0,84% 100%,16% 100%)',
+      boxShadow:`inset ${w*0.12}px 0 ${w*0.16}px -4px rgba(255,255,255,.18), inset -${w*0.16}px 0 ${w*0.18}px -4px ${p.shade}, inset 0 -${h*0.18}px ${h*0.2}px -6px rgba(0,0,0,.3)`}}>
+      {p.accent&&<div style={{position:'absolute',top:'30%',left:0,right:0,height:Math.max(2,size*0.07),background:p.accent,opacity:p.glow}}/>}
+    </div>
+    <div style={{position:'absolute',top:0,width:mouthW,height:rim,borderRadius:`${rim*0.5}px ${rim*0.5}px ${rim*0.22}px ${rim*0.22}px`,background:p.rim,
+      boxShadow:`inset 0 1px 1px rgba(255,255,255,.4), 0 1px 0 ${p.rimEdge}, inset 0 -2px 3px ${p.shade}`,
+      borderBottom:p.accent&&tier==='heirloom'?`1px solid ${p.accent}`:'none'}}/>
+    <div style={{position:'absolute',top:rim*0.42,width:mouthW*0.9,height:rim*0.92,borderRadius:'50%',...POT_SOIL}}/>
+    {children&&<div style={{position:'absolute',bottom:h*0.52,left:'50%',transform:'translateX(-50%)'}}>{children}</div>}
+  </div>;
+}
+/* 花园背景缩略（移植原型 SCENES 调色）：天空渐变 + 光晕 + 日月 + 远山剪影 + 地面 */
+const SCENE_THUMBS={
+  provence:{sky:['#A7C3E6','#CCDDED','#F0E7D0','#E6D6BA'],cel:{t:'sun',x:71,y:30,r:9,c:'#FDEBB6'},ridges:[['#94A6C6',.5],['#A6BBA4',.85]],ground:['#B7A2D0','#8A6FB0']},
+  tuscany:{sky:['#F3C284','#F6D7A2','#F1E3C0','#E0CD9F'],cel:{t:'sun',x:30,y:34,r:12,c:'#FFD98A'},ridges:[['#C7A874',.55],['#B59A5E',.9]],ground:['#C3AC6E','#9C8649']},
+  vangogh:{sky:['#162A57','#21407B','#356094','#3E6FA0'],cel:{t:'moon',x:72,y:24,r:9,c:'#F3E7A0'},ridges:[['#152340',.7],['#1B2D44',.95]],ground:['#1E2E2B','#14201E']},
+};
+function SceneThumb({scene='tuscany',w=48,h=42}){
+  const sc=SCENE_THUMBS[scene],uid='st-'+scene;
+  const skyStops=sc.sky.map((c,i)=>`<stop offset="${(i/(sc.sky.length-1)*100)|0}%" stop-color="${c}"/>`).join('');
+  const cel=sc.cel;
+  const celBody=cel.t==='moon'
+    ? `<circle cx="${cel.x}" cy="${cel.y}" r="${cel.r}" fill="${cel.c}"/><circle cx="${cel.x+cel.r*.4}" cy="${cel.y-cel.r*.25}" r="${cel.r*.9}" fill="${sc.sky[1]}"/>`
+    : `<circle cx="${cel.x}" cy="${cel.y}" r="${cel.r}" fill="${cel.c}"/>`;
+  const ridges=sc.ridges.map((rg,i)=>`<path d="M0 ${58+i*10} Q30 ${50+i*10} 55 ${57+i*10} T100 ${55+i*10} L100 130 L0 130Z" fill="${rg[0]}" opacity="${rg[1]}"/>`).join('');
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 130" preserveAspectRatio="xMidYMid slice">`
+    +`<defs><linearGradient id="sky-${uid}" x1="0" y1="0" x2="0" y2="1">${skyStops}</linearGradient>`
+    +`<linearGradient id="gnd-${uid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${sc.ground[0]}"/><stop offset="100%" stop-color="${sc.ground[1]}"/></linearGradient></defs>`
+    +`<rect width="100" height="130" fill="url(#sky-${uid})"/>${celBody}${ridges}`
+    +`<rect y="82" width="100" height="48" fill="url(#gnd-${uid})"/></svg>`;
+  return <span style={{display:'block',width:w,height:h,borderRadius:8,overflow:'hidden'}} dangerouslySetInnerHTML={{__html:svg}}/>;
+}
+
+/* ---------- 花朵渲染桥接：用移植的引擎产出真花 ---------- */
+function Bloom({species,seed=7,min=90,hour=13,size=120,stage=null,grow=1,withered=false,sway=false}){
+  const d=dna({species,seed,min,hour,streak:3,task:''});
+  return <Flower d={d} size={size} grow={grow} stage={stage} withered={withered} sway={sway}/>;
+}
+
+/* ---------- 顶栏 ---------- */
+function Nav({t,lang,setLang}){
+  const [sc,setSc]=useState(false);
+  const [menu,setMenu]=useState(false);
+  const [langOpen,setLangOpen]=useState(false);
+  useEffect(()=>{const on=()=>setSc(window.scrollY>20);on();window.addEventListener('scroll',on);return()=>window.removeEventListener('scroll',on);},[]);
+  useEffect(()=>{document.body.style.overflow=menu?'hidden':'';return()=>{document.body.style.overflow='';};},[menu]);
+  useEffect(()=>{if(!langOpen)return;const off=()=>setLangOpen(false);window.addEventListener('click',off);return()=>window.removeEventListener('click',off);},[langOpen]);
+  const links=[['#tour','nav_tour'],['#mechanic','nav_mechanic'],['#flowers','nav_flowers'],['#together','nav_together']];
+  const LANGS=[['zh','中文'],['en','English']];
+  const pick=(v)=>{setLang(v);setLangOpen(false);};
+  return (
+    <nav className={'nav'+(sc?' scrolled':'')}>
+      <div className="nav-in">
+        <a href="#top" className="brand" onClick={()=>setMenu(false)}>
+          <span className="brand-mark" dangerouslySetInnerHTML={{__html:flowerSVG(dna({species:'poppy',seed:4,min:80,hour:11,streak:1,task:''}),{size:30})}}/>
+          Bloom
+        </a>
+        <div className="nav-links">
+          {links.map(([h,k])=><a key={h} href={h}>{t(k)}</a>)}
+        </div>
+        <div className="nav-right">
+          <div className="lang-wrap" onClick={e=>e.stopPropagation()}>
+            <button className="lang-btn" aria-haspopup="listbox" aria-expanded={langOpen} onClick={()=>setLangOpen(o=>!o)}>
+              <Ic n="globe" s={15}/>
+              <span>{lang==='zh'?'中文':'English'}</span>
+              <span className={'lang-caret'+(langOpen?' up':'')}/>
+            </button>
+            {langOpen&&(
+              <div className="lang-menu" role="listbox">
+                {LANGS.map(([v,label])=>(
+                  <button key={v} role="option" aria-selected={lang===v}
+                    className={'lang-opt tap'+(lang===v?' on':'')} onClick={()=>pick(v)}>
+                    {label}{lang===v&&<Ic n="check" s={14}/>}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <a href="#get" className="btn btn-accent btn-sm nav-dl">{t('nav_download')}</a>
+          <button className={'nav-menu-btn tap'+(menu?' open':'')} aria-label="Menu" aria-expanded={menu} onClick={()=>setMenu(m=>!m)}>
+            <span/><span/><span/>
+          </button>
+        </div>
+      </div>
+      <div className={'nav-drawer'+(menu?' open':'')}>
+        {links.map(([h,k])=><a key={h} href={h} onClick={()=>setMenu(false)}>{t(k)}</a>)}
+        <a href="#get" className="btn btn-accent nav-drawer-dl" onClick={()=>setMenu(false)}>{t('nav_download')}<Ic n="arrow" s={16}/></a>
+      </div>
+    </nav>
+  );
+}
+
+/* ---------- Hero ---------- */
+function Hero({t}){
+  const stars=useRef(Array.from({length:26}).map(()=>({l:Math.random()*100,tp:Math.random()*72,d:Math.random()*4,dur:3+Math.random()*3}))).current;
+  return (
+    <header className="hero" id="top">
+      <div className="wrap hero-grid">
+        <div>
+          <div className="eyebrow">{t('hero_eyebrow')}</div>
+          <h1 className="serif-hero" style={{whiteSpace:'pre-line'}}>{t('hero_title')}</h1>
+          <p className="lead">{t('hero_lead')}</p>
+          <div className="hero-cta">
+            <a href="#get" className="btn btn-accent">{t('hero_cta1')}<Ic n="arrow" s={17}/></a>
+            <a href="#mechanic" className="btn btn-ghost">{t('hero_cta2')}</a>
+          </div>
+          <div className="hero-note"><Ic n="seed" s={15}/>{t('hero_note')}</div>
+        </div>
+        <div className="hero-stage">
+          <div className="stars">{stars.map((s,i)=><span key={i} className="star" style={{left:s.l+'%',top:s.tp+'%',animationDelay:s.d+'s',animationDuration:s.dur+'s'}}/>)}</div>
+          <div className="floor"/>
+          <div style={{position:'relative',zIndex:2,transform:'translateY(-6px)'}}>
+            <Bloom species="protea" seed={19} min={118} hour={17} size={230} sway/>
+          </div>
+          <div className="hero-caption serif-it">「{t('hero_caption')}」</div>
+        </div>
+      </div>
+    </header>
+  );
+}
+/* ---------- 产品导览：还原原型的真实界面 + 自动演示（选时间 → 运行 → 开花 → 循环） ---------- */
+const TOUR_DEMOS={
+  focus:{eyebrow:['专注计时','Focus timer'],title:['种下一次 ','Plant a '],titleIt:['专注','session'],
+    ring:'var(--accent)',knob:'var(--accent)',runRing:'#C2603F',sp:'poppy',seed:9,hour:13,
+    minV:5,maxV:120,step:5,target:25,unit:['分钟','min'],hint:['拖动圆环调整','drag to adjust'],
+    tapLabel:['点击更换','TAP TO CHANGE'],coin:'+20',coinLabel:['完成可得金币','coins on finish'],
+    run:['专注中','Focusing'],begin:['开始专注','Begin focus'],task:['深度工作','DEEP WORK'],
+    bloomName:['罂粟','Poppy'],rareLabel:['稀有','Rare'],rareCol:'#4F9D8C',streak:7,
+    statDur:['25 分','25 min'],statVerb:['专注','focused'],dark:false},
+  mindful:{eyebrow:['正念呼吸','Mindful breathing'],title:['深','Take a '],titleIt:['呼吸','breath'],
+    ring:'var(--m-lav)',knob:'var(--m-lav)',runRing:'#A294B0',sp:'lycoris',seed:5,hour:9,
+    minV:3,maxV:20,step:1,target:10,unit:['轮','rounds'],hint:['拖动圆环调整','drag to adjust'],
+    tapLabel:['点击更换','TAP TO CHANGE'],coin:'+2',coinLabel:['完成可得金币','coins on finish'],
+    run:['呼吸中','Breathing'],begin:['开始正念','Begin'],task:['盒式呼吸','BOX BREATHING'],
+    bloomName:['彼岸花','Red Spider Lily'],rareLabel:['传奇','Legendary'],rareCol:'#D83A3A',streak:7,
+    statDur:['10 轮','10 rounds'],statVerb:['呼吸','breathed'],dark:false},
+  sleep:{eyebrow:['休息','Rest'],title:['睡眠','Sleep '],titleIt:['花园','garden'],
+    ring:'var(--m-lav)',knob:'#E7C77E',runRing:'#A294B0',sp:'moonflower',seed:14,hour:23,
+    unit:['','' ],tapLabel:['点击更换','TAP TO CHANGE'],coin:'+40',coinLabel:['完成可得金币','coins on finish'],
+    run:['入睡中','Sleeping'],begin:['开始睡眠','Begin sleep'],task:['夜间作息','NIGHT REST'],
+    bloomName:['月光花','Moonflower'],rareLabel:['史诗','Epic'],rareCol:'#B7A7D6',streak:6,
+    statDur:['8h','8h'],statVerb:['休息','rested'],dark:true},
+};
+const TOUR_TABS=[['focus',['专注','Focus']],['mindful',['正念','Mindful']],['sleep',['睡眠','Sleep']]];
+const FOCUS_CHIPS=[['深度工作','Deep work'],['阅读','Reading'],['写作','Writing'],['学习','Study'],['设计','Design']];
+const TOUR_STAGES=[[0,['种子入土','Seed in soil']],[.16,['破土发芽','A shoot']],[.4,['舒展叶片','Leaves unfurl']],[.62,['花苞形成','A bud forms']],[.82,['花苞膨大','Bud swells']],[1,['盛开','In full bloom']]];
+const easeOut=x=>1-Math.pow(1-x,3);
+const _pad2=n=>String(n).padStart(2,'0');
+const fmtClock=s=>{s=Math.max(0,Math.ceil(s));return _pad2(Math.floor(s/60))+':'+_pad2(s%60);};
+function useTourClock(mode){
+  const [tick,setTick]=useState(0);
+  const boxRef=useRef();const raf=useRef();const vis=useRef(false);   // start paused until scrolled into view
+  const elapsed=useRef(0);const last=useRef(null);                    // accumulate ONLY the time spent visible
+  useEffect(()=>{
+    const el=boxRef.current;
+    const io=new IntersectionObserver(([e])=>{vis.current=e.isIntersecting;},{threshold:.2});
+    if(el)io.observe(el);
+    const LOOP=8000+(mode==='mindful'?700:mode==='sleep'?1400:0);   // slight offset so the three cards run out of sync
+    const step=(now)=>{
+      if(vis.current){
+        if(last.current!=null)elapsed.current+=now-last.current;     // advance only while in view
+        last.current=now;
+        setTick((elapsed.current%LOOP)/LOOP);
+      }else{
+        last.current=null;                                            // frozen; resume cleanly next time it's visible
+      }
+      raf.current=requestAnimationFrame(step);
+    };
+    raf.current=requestAnimationFrame(step);
+    return()=>{cancelAnimationFrame(raf.current);if(el)io.disconnect();};
+  },[mode]);
+  return [tick,boxRef];
+}
+function TourDemo({mode,lang}){
+  const cfg=TOUR_DEMOS[mode];
+  const [tick,boxRef]=useTourClock(mode);
+  const L=i=>lang==='zh'?i[0]:i[1];
+  const t=tick;
+  // ── the full loop timeline, in normalized time (0..1) ──
+  //  setup  : dial sweeps to the chosen value                     [0    .20)
+  //  → run  : cross into the dark running screen, timer counts,
+  //           flower grows through its lifecycle stages           [.20  .74)
+  //  → bloom: cross into the light result screen, full bloom      [.74  .96)
+  //  → reset back to setup                                        [.96  1  )
+  const P={setupEnd:.20,runStart:.24,runEnd:.72,bloomStart:.76,bloomEnd:.96};
+  let phase,ph;   // ph = 0..1 progress *within* the phase
+  if(t<P.runStart){phase='setup';ph=Math.min(1,t/P.setupEnd);}
+  else if(t<P.bloomStart){phase='run';ph=Math.min(1,Math.max(0,(t-P.runStart)/(P.runEnd-P.runStart)));}
+  else{phase='bloom';ph=Math.min(1,Math.max(0,(t-P.bloomStart)/(P.bloomEnd-P.bloomStart)));}
+  // crossfade windows between screens
+  const XF=.04;
+  const fadeSetup=t<P.setupEnd?1:t<P.runStart?1-(t-P.setupEnd)/(P.runStart-P.setupEnd):0;
+  const fadeRun=t<P.runStart?0:t<P.runStart+XF?(t-P.runStart)/XF:t<P.bloomStart?1:t<P.bloomStart+XF?1-(t-P.bloomStart)/XF:0;
+  const fadeBloom=t<P.bloomStart?0:t<P.bloomStart+XF?(t-P.bloomStart)/XF:t>P.bloomEnd?Math.max(0,1-(t-P.bloomEnd)/(1-P.bloomEnd)):1;
+  const isDark=(phase==='run')||(mode==='sleep'&&phase!=='bloom');   // run screen is always dark; sleep setup is dark too
+  return (
+    <div ref={boxRef} className={'tdemo'+(isDark?' dark':'')}>
+      <div className="tdemo-bar"><span>9:41</span><span className="tdemo-notch"/><span className="tdemo-sig"/></div>
+      <div className="tdemo-stack">
+        {fadeSetup>0.01&&<div className="tdemo-layer" style={{opacity:fadeSetup}}>
+          <div className="tdemo-scroll">
+            {mode==='sleep'
+              ? <TourSleep cfg={cfg} L={L} dialP={phase==='setup'?easeOut(ph):1} stage={0} growing={false}/>
+              : <TourDial cfg={cfg} mode={mode} L={L} dialP={phase==='setup'?easeOut(ph):1} stage={0} growing={false}/>}
+          </div>
+          <TourTabs L={L}/>
+        </div>}
+        {fadeRun>0.01&&<div className="tdemo-layer" style={{opacity:fadeRun}}>
+          <TourRun cfg={cfg} mode={mode} L={L} ph={ph}/>
+        </div>}
+        {fadeBloom>0.01&&<div className="tdemo-layer" style={{opacity:fadeBloom}}>
+          <div className="tdemo-scroll">
+            <TourBloom cfg={cfg} mode={mode} L={L} ph={ph}/>
+          </div>
+          <TourTabs L={L}/>
+        </div>}
+      </div>
+    </div>
+  );
+}
+function TourTabs({L}){
+  return (
+    <div className="tdemo-tabbar">
+      <span className="on">{L(['计时','Timer'])}</span><span>{L(['花园','Garden'])}</span>
+      <span>{L(['一起','Together'])}</span><span>{L(['洞察','Insights'])}</span>
+    </div>
+  );
+}
+/* setup screen (focus & mindful) — round drag-dial with live preview flower, chips, coin, begin */
+function TourDial({cfg,mode,L,dialP}){
+  const val=cfg.minV+Math.round((cfg.target-cfg.minV)*dialP/cfg.step)*cfg.step;
+  const frac=(val-cfg.minV)/(cfg.maxV-cfg.minV);
+  const R=132,C=2*Math.PI*R,knobA=frac*360*Math.PI/180,kx=160+R*Math.cos(knobA),ky=160+R*Math.sin(knobA);
+  const grow=bouquetGrow(mode==='focus'?val:val*5);   // preview openness scales with the dial (like the app)
+  const flower=useMemo(()=><Bloom species={cfg.sp} seed={cfg.seed} min={mode==='focus'?val*4:80} hour={cfg.hour} size={116} grow={grow}/>,[mode,grow,cfg.sp]);
+  return (
+    <React.Fragment>
+      <div className="tdemo-head">
+        <div>
+          <div className="tdemo-eyebrow">{L(cfg.eyebrow)}</div>
+          <div className="tdemo-title">{L(cfg.title)}<i>{L(cfg.titleIt)}</i></div>
+        </div>
+        <div className="tdemo-coinpill"><span className="tdemo-coindot"/>99999</div>
+      </div>
+      <div className="tdemo-seg">
+        {TOUR_TABS.map(([k,l])=><span key={k} className={k===mode?'on':''}>{L(l)}</span>)}
+      </div>
+      {mode==='mindful'&&<div className="tdemo-mtitle">{L(['深呼吸','Take a breath'])}<span>{L(['拖动圆环选择呼吸轮数——花开得越盛','drag to set breath cycles'])}</span></div>}
+      <div className="tdemo-dialwrap">
+        <svg viewBox="0 0 320 320" width="100%" height="100%" style={{transform:'rotate(-90deg)'}}>
+          <circle cx="160" cy="160" r={R} fill="none" stroke="var(--line)" strokeWidth="14"/>
+          <circle cx="160" cy="160" r={R} fill="none" stroke={cfg.ring} strokeWidth="14" strokeLinecap="round" strokeDasharray={C} strokeDashoffset={C*(1-frac)}/>
+          {Array.from({length:24}).map((_,i)=>{const a=i/24*2*Math.PI,r1=R-26,r2=R-20;return <line key={i} x1={160+r1*Math.cos(a)} y1={160+r1*Math.sin(a)} x2={160+r2*Math.cos(a)} y2={160+r2*Math.sin(a)} stroke="var(--line-2)" strokeWidth="2"/>;})}
+          <circle cx={kx} cy={ky} r="13" fill="var(--card)" stroke={cfg.knob} strokeWidth="3"/>
+        </svg>
+        <div className="tdemo-center">
+          <div className="tdemo-flower">{flower}</div>
+          <span className="tdemo-taplabel">{L(cfg.tapLabel)}</span>
+          <div className="tdemo-num">{val}</div>
+          <div className="tdemo-hint">{L(cfg.unit)} · {L(cfg.hint)}</div>
+        </div>
+      </div>
+      <div className="tdemo-coinrow"><span className="tdemo-coindot"/>{cfg.coin} <em>{L(cfg.coinLabel)}</em></div>
+      {mode==='focus'&&<React.Fragment>
+        <div className="tdemo-lbl">{L(['意图','Intention'])} <em>{L(['· 仅作记录标签','· just a label'])}</em></div>
+        <div className="tdemo-chips">{FOCUS_CHIPS.map((c,i)=><span key={i} className={i===0?'on':''}>{L(c)}</span>)}<span className="dash">+ {L(['自定义','Custom'])}</span></div>
+        <div className="tdemo-lbl">{L(['环境音','Ambient'])}</div>
+        <div className="tdemo-chips">{[['森林','Forest'],['雨声','Rain'],['海浪','Waves'],['静音','Silent']].map((c,i)=><span key={i} className={i===0?'on':''}>{L(c)}</span>)}</div>
+      </React.Fragment>}
+      <div className="tdemo-begin">{L(cfg.begin)} · {val}{mode==='focus'?L(['分','m']):L(['轮','×'])}</div>
+    </React.Fragment>
+  );
+}
+/* setup screen (sleep) — 24h ring with bedtime · wake handles, moonflower previews window health */
+function TourSleep({cfg,L,dialP}){
+  const R=96,CX=130,CY=130;
+  const bedM=23*60;                       // 23:00 fixed bedtime
+  const wakeTarget=7*60;                   // sweeps toward 07:00 (8h window)
+  const startWake=1*60;                    // opens from a short 2h window
+  const wakeM=Math.round((startWake+(wakeTarget-startWake)*dialP)/5)*5;
+  const dur=((wakeM-bedM+1440)%1440)||1440,h=dur/60;
+  const polar=m=>{const a=(m/1440)*2*Math.PI-Math.PI/2;return [CX+R*Math.cos(a),CY+R*Math.sin(a)];};
+  const [bx,by]=polar(bedM),[wx,wy]=polar(wakeM),large=dur>720?1:0;
+  const health=(h>=7&&h<=9)?1:Math.max(0.1,1-Math.abs(h-8)*0.2);
+  const grow=0.5+0.5*health;
+  const flower=useMemo(()=><Bloom species="moonflower" seed={cfg.seed} min={dur} hour={23} size={104} grow={grow}/>,[grow,cfg.seed]);
+  const toT=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+  const zone=h<7?L(['偏短','short']):h>9?L(['偏长','long']):L(['理想区间','ideal']);
+  const zoneCol=(h>=7&&h<=9)?'#A6E0C8':'#E0C8A6';
+  return (
+    <React.Fragment>
+      <div className="tdemo-sleephead">
+        <div className="tdemo-eyebrow">{L(cfg.eyebrow)}</div>
+        <div className="tdemo-title">{L(cfg.title)}<i>{L(cfg.titleIt)}</i></div>
+      </div>
+      <div className="tdemo-sleepnote">{L(['拖动把手设定作息窗口','Drag the handles to set your window'])}</div>
+      <div className="tdemo-dialwrap sleep">
+        <svg viewBox="0 0 260 260" width="100%" height="100%">
+          <circle cx={CX} cy={CY} r={R} fill="none" stroke="rgba(237,232,221,.16)" strokeWidth="14"/>
+          {Array.from({length:24}).map((_,i)=>{const a=i/24*2*Math.PI-Math.PI/2,r1=R+13,r2=R+(i%6===0?20:17);return <line key={i} x1={CX+r1*Math.cos(a)} y1={CY+r1*Math.sin(a)} x2={CX+r2*Math.cos(a)} y2={CY+r2*Math.sin(a)} stroke={'rgba(237,232,221,'+(i%6===0?.45:.2)+')'} strokeWidth={i%6===0?2:1}/>;})}
+          <path d={`M ${bx} ${by} A ${R} ${R} 0 ${large} 1 ${wx} ${wy}`} fill="none" stroke="var(--m-lav)" strokeWidth="14" strokeLinecap="round"/>
+          <g><circle cx={bx} cy={by} r="13" fill="#211d2e" stroke="var(--m-lav)" strokeWidth="3"/><text x={bx} y={by+3} textAnchor="middle" fill="#EDE8DD" style={{font:'700 11px var(--sans)'}}>☾</text></g>
+          <g><circle cx={wx} cy={wy} r="13" fill="#211d2e" stroke="#E7C77E" strokeWidth="3"/><text x={wx} y={wy+3} textAnchor="middle" fill="#EDE8DD" style={{font:'700 10px var(--sans)'}}>☀</text></g>
+        </svg>
+        <div className="tdemo-center">
+          <div className="tdemo-flower">{flower}</div>
+          <span className="tdemo-taplabel">{L(cfg.tapLabel)}</span>
+        </div>
+      </div>
+      <div className="tdemo-sleeptime">{toT(bedM)} → {toT(wakeM)} <span>· {Math.floor(dur/60)}h {dur%60}m</span></div>
+      <div className="tdemo-zone" style={{color:zoneCol}}>{Math.floor(dur/60)}h {dur%60}m · {zone}</div>
+      <div className="tdemo-coinrow"><span className="tdemo-coindot"/>{cfg.coin} <em>{L(cfg.coinLabel)}</em></div>
+      <div className="tdemo-begin sleep">🌙 {L(cfg.begin)}</div>
+    </React.Fragment>
+  );
+}
+/* running screen — the dark focus/mindful/sleep session: timer counts down (sped up), flower grows through
+   its lifecycle stages, coins tally up. Mirrors the app's FocusScreen. */
+function TourRun({cfg,mode,L,ph}){
+  const prog=ph;                              // 0→1 accelerated "session" progress
+  const stIdx=TOUR_STAGES.reduce((a,s,i)=>prog>=s[0]?i:a,0);
+  const stage=TOUR_STAGES[stIdx][0];
+  const stageLabel=TOUR_STAGES[stIdx][1];
+  const qs=Math.round(prog*24)/24;            // quantize the grow so the SVG rebuilds ~25×
+  const flower=useMemo(()=><Bloom species={cfg.sp} seed={cfg.seed} min={mode==='focus'?100:80} hour={cfg.hour} size={150} stage={qs}/>,[qs,mode,cfg.sp]);
+  const R=128,C=2*Math.PI*R;
+  // pretty countdown: focus 25:00→0, mindful shows round x/10, sleep shows a clock winding to morning
+  const remainTxt=mode==='mindful'
+    ? Math.max(1,Math.ceil(prog*cfg.target))+' / '+cfg.target
+    : mode==='sleep'
+      ? fmtClock((1-prog)*8*3600/60)         // compressed 8h shown as mm:ss winding down
+      : fmtClock((1-prog)*25*60);
+  const line=mode==='focus'?L(['留下来。每一分钟都会再绽开一片花瓣。','Stay. Each minute opens another petal.'])
+    :mode==='mindful'?L(['跟随节奏，慢慢呼吸。','Follow the rhythm, breathe slow.'])
+    :L(['安睡吧，你的花会在夜里悄悄生长。','Sleep. Your bloom grows through the night.']);
+  return (
+    <div className="tdemo-runscreen">
+      <div className="tdemo-runtop">
+        <span className="tdemo-x">✕</span>
+        <span className="tdemo-runtask">{L(cfg.task)}</span>
+        <span style={{width:14}}/>
+      </div>
+      <div className="tdemo-runmid">
+        <div className="tdemo-runring">
+          <svg viewBox="0 0 300 300" width="100%" height="100%" style={{position:'absolute',transform:'rotate(-90deg)'}}>
+            <circle cx="150" cy="150" r={R} fill="none" stroke="rgba(237,232,221,.12)" strokeWidth="2.5"/>
+            <circle cx="150" cy="150" r={R} fill="none" stroke={cfg.runRing} strokeWidth="3" strokeLinecap="round" strokeDasharray={C} strokeDashoffset={C*(1-prog)}/>
+          </svg>
+          <div className="tdemo-runflower">{flower}</div>
+        </div>
+        <div className="tdemo-runclock">{remainTxt}</div>
+        <div className="tdemo-runstage">{L(stageLabel)} · {Math.round(prog*100)}%</div>
+        <div className="tdemo-runtally"><span className="tdemo-coindot"/>{Math.round((cfg.coin.replace('+','')|0)*prog)}</div>
+        <div className="tdemo-runline">{line}</div>
+      </div>
+      <div className="tdemo-runctrl">
+        <span className="tdemo-runbtn ghost">♪</span>
+        <span className="tdemo-runbtn">❙❙</span>
+      </div>
+    </div>
+  );
+}
+/* bloom result — the light celebration screen: full flower, rarity eyebrow, stat strip. Mirrors ResultScreen. */
+function TourBloom({cfg,mode,L,ph}){
+  const pop=easeOut(Math.min(1,ph/0.4));       // the "grow-in" pop of the finished bloom
+  const flower=useMemo(()=><Bloom species={cfg.sp} seed={cfg.seed} min={mode==='focus'?100:80} hour={cfg.hour} size={168} grow={1}/>,[mode,cfg.sp]);
+  const stats=[
+    [L(cfg.statDur),L(cfg.statVerb)],
+    [cfg.coin,L(['金币','coins'])],
+    [cfg.streak+L(['天','d']),L(['连续','streak'])],
+    [L(cfg.rareLabel),L(['稀有度','rarity'])],
+  ];
+  return (
+    <div className="tdemo-bloomscreen">
+      <div className="tdemo-bloomeyebrow" style={{color:cfg.rareCol}}>{L(cfg.rareLabel)}{L(['的',' '])}{L(cfg.bloomName)}</div>
+      <div className="tdemo-bloomflower" style={{transform:`scale(${0.85+0.15*pop})`,opacity:pop}}>{flower}</div>
+      <div className="tdemo-bloomtitle">{L(['它绽放了','It bloomed'])}</div>
+      <div className="tdemo-bloomdesc">{L(['一朵由这次'+({focus:'专注',mindful:'呼吸',sleep:'休息'})[mode]+'长成的花，将永远活在你的花园里。','A bloom grown from this session — it lives in your garden forever.'])}</div>
+      <div className="tdemo-bloomstats">
+        {stats.map(([n,l],i)=><div key={i} className="tdemo-stat"><b>{n}</b><span>{l}</span></div>)}
+      </div>
+      <div className="tdemo-begin" style={mode==='sleep'?{background:'var(--ink)',color:'#fff'}:{}}>{L(['再种一次','Plant again'])}</div>
+    </div>
+  );
+}
+function Tour({t,lang}){
+  const shots=[
+    {id:'focus',dark:false,demo:true},
+    {id:'mindful',dark:false,demo:true},
+    {id:'sleep',dark:true,demo:true},
+    {id:'garden',dark:false},
+    {id:'together',dark:false},
+    {id:'insights',dark:false},
+  ];
+  return (
+    <section className="sec tour" id="tour">
+      <div className="wrap">
+        <div className="sec-head center">
+          <div className="eyebrow">{t('tour_eyebrow')}</div>
+          <h2 className="serif-xl" style={{whiteSpace:'pre-line'}}>{t('tour_title')}</h2>
+          <p className="lead" style={{marginTop:14}}>{t('tour_lead')}</p>
+        </div>
+        <div className="tour-grid">
+          {shots.map(s=>(
+            <div key={s.id} className="tour-cell">
+              <div className={'tour-phone'+(s.dark?' dark':'')}>
+                {s.demo
+                  ? <TourDemo mode={s.id} lang={lang}/>
+                  : <img className="tour-shot on"
+                      src={'assets/screens/'+s.id+'_'+lang+'.png'}
+                      alt={t('tour_'+s.id+'_t')} loading="lazy" draggable="false"/>}
+              </div>
+              <div className="tour-cell-copy">
+                <h3 className="tour-cell-t">{t('tour_'+s.id+'_t')}</h3>
+                <p className="tour-cell-d">{t('tour_'+s.id+'_d')}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- 核心机制：留下才开花 ---------- */
+function Mechanic({t}){
+  return (
+    <section className="mech sec" id="mechanic">
+      <div className="wrap mech-grid">
+        <div>
+          <div className="eyebrow">{t('mech_eyebrow')}</div>
+          <h2 style={{whiteSpace:'pre-line'}}>{t('mech_title')}</h2>
+          <p>{t('mech_lead')}</p>
+        </div>
+        <div className="mech-demo">
+          <div className="mech-col">
+            <Bloom species="camellia" seed={12} min={95} hour={14} size={132} sway/>
+            <span className="mech-tag stay">{t('mech_stay')}</span>
+            <span style={{font:'400 13px var(--news)',fontStyle:'italic',color:'rgba(184,201,166,.8)'}}>{t('mech_stay_d')}</span>
+          </div>
+          <div className="mech-col">
+            <Bloom species="camellia" seed={12} min={95} hour={14} size={132} withered/>
+            <span className="mech-tag leave">{t('mech_leave')}</span>
+            <span style={{font:'400 13px var(--news)',fontStyle:'italic',color:'rgba(217,168,160,.75)'}}>{t('mech_leave_d')}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* 意图 → 品种 映射（取自引擎 SPECIES） */
+const HOURS=[
+  {zh:'清晨',en:'Dawn',range:'5–9',hour:7,band:'dawn'},
+  {zh:'白昼',en:'Daytime',range:'9–17',hour:13,band:'day'},
+  {zh:'黄昏',en:'Dusk',range:'17–21',hour:19,band:'dusk'},
+  {zh:'深夜',en:'Late night',range:'21–5',hour:23,band:'night'},
+];
+
+/* ---------- 金币经济：赚取 → 消费 ---------- */
+const EARN_SRC=[
+  {icf:'seed',t:'f1_e1',d:'f1_e1d',coin:'+20',col:'var(--accent)'},
+  {icf:'breath',t:'f1_e2',d:'f1_e2d',coin:'+2',col:'var(--m-lav)'},
+  {icf:'moon',t:'f1_e3',d:'f1_e3d',coin:'+40',col:'#B7A7D6'},
+];
+const SPEND_DST=[
+  {kind:'flower',sp:'lily',seed:11,h:13,t:'f1_s1',d:'f1_s1d'},
+  {kind:'scene',t:'f1_s2',d:'f1_s2d'},
+  {kind:'pot',t:'f1_s3',d:'f1_s3d'},
+  {kind:'gacha',t:'f1_s4',d:'f1_s4d'},
+];
+function Intent({t,lang}){
+  return (
+    <section className="sec" id="intention">
+      <div className="wrap frow">
+        <div>
+          <div className="eyebrow">{t('f1_eyebrow')}</div>
+          <h3 className="serif-xl" style={{whiteSpace:'pre-line'}}>{t('f1_title')}</h3>
+          <p>{t('f1_lead')}</p>
+          <div className="econ-earn">
+            <div className="econ-lbl">{t('f1_earn')}</div>
+            {EARN_SRC.map((e,i)=>(
+              <div key={i} className="econ-erow">
+                <span className="econ-eic" style={{background:e.col}}><Ic n={e.icf} s={16}/></span>
+                <span className="econ-etxt"><b>{t(e.t)}</b><em>{t(e.d)}</em></span>
+                <span className="econ-ecoin"><span className="econ-coin"/>{e.coin}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="frow-media">
+          <div className="econ-card">
+            <div className="econ-hub"><span className="econ-hubcoin"/><span className="econ-hubn">{lang==='zh'?'金币':'Coins'}</span></div>
+            <div className="econ-spend">
+              {SPEND_DST.map((s,i)=>(
+                <div key={i} className="econ-srow">
+                  <span className={'econ-sic'+(s.kind==='gacha'?' gacha':'')}>
+                    {s.kind==='flower'&&<Bloom species={s.sp} seed={s.seed} min={100} hour={s.h} size={38}/>}
+                    {s.kind==='scene'&&<SceneThumb scene="tuscany" w={44} h={40}/>}
+                    {s.kind==='pot'&&<Pot tier="porcelain" size={38}/>}
+                    {s.kind==='gacha'&&<Ic n="dieflower" s={24}/>}
+                  </span>
+                  <span className="econ-stxt"><b>{t(s.t)}</b><em>{t(s.d)}</em></span>
+                  <span className="econ-sarrow"><Ic n="arrow" s={14}/></span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- 花园：时光积成花田 ---------- */
+const GARDEN_PLOTS=[
+  {sp:'poppy',s:3,m:90,h:10},{sp:'daisy',s:7,m:45,h:9},{sp:'tulip',s:2,m:60,h:15},
+  {sp:'lavender',s:5,m:75,h:19},{sp:'bellflower',s:8,m:50,h:11},{sp:'lotus',s:1,m:110,h:13},
+  {sp:'camellia',s:4,m:40,h:17},null,{sp:'sunflower',s:6,m:95,h:12},
+  {sp:'clover',s:9,m:35,h:14},{sp:'dahlia',s:11,m:80,h:16},{sp:'iris',s:13,m:105,h:20},
+];
+function Garden({t}){
+  return (
+    <section className="sec" id="garden">
+      <div className="wrap frow">
+        <div className="frow-media">
+          <div className="garden-scene">
+            <div className="garden-grid">
+              {GARDEN_PLOTS.map((p,i)=>(
+                <div key={i} className={'plot'+(p?'':' empty')}>
+                  {p&&<Bloom species={p.sp} seed={p.s} min={p.m} hour={p.h} size={76} sway/>}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div>
+          <div className="eyebrow">{t('f2_eyebrow')}</div>
+          <h3 className="serif-xl">{t('f2_title')}</h3>
+          <p>{t('f2_lead')}</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+/* ---------- 花图鉴 ---------- */
+/* 每种花一个稳定 seed（与引擎 speciesSeed 同源），保证预览即成品 */
+function CodexCard({sp,lang}){
+  const tier=SP_RARITY[sp]||'common';
+  const rc={common:'var(--ink-3)',uncommon:'var(--m-sage)',rare:'var(--accent)',epic:'var(--m-lav)',legendary:'#C9A24B'}[tier];
+  const rl={common:['普通','Common'],uncommon:['罕见','Uncommon'],rare:['稀有','Rare'],epic:['史诗','Epic'],legendary:['传说','Legendary']}[tier];
+  return (
+    <div className="codex-card">
+      <div className="codex-flowerbox">
+        <Bloom species={sp} seed={speciesSeed(sp)%97} min={100} hour={13} size={96} sway/>
+      </div>
+      <div className="nm">{SP_LABEL[sp]}</div>
+      <div className="tier" style={{color:rc}}>{rl[lang==='zh'?0:1]}</div>
+    </div>
+  );
+}
+function Codex({t,lang}){
+  const TABS=[['all','codex_t_all'],['free','codex_t_free'],['rare','codex_t_rare'],['epic','codex_t_epic'],['legendary','codex_t_legendary']];
+  const [tab,setTab]=useState('all');
+  // 从引擎目录挑一批有专属轮廓的花展示（跳过 breath / moon 变体等特殊项）
+  const SHOW=['daisy','clover','tulip','bellflower','poppy','lotus','lavender','sunflower','dahlia','camellia','hibiscus','marigold',
+    'iris','peony','anemone','magnolia','ranunculus','gardenia','freesia','zinnia','cosmos','begonia','azalea','wisteria','jasmine','plumeria','lily',
+    'rose','orchid','firelily','aurora','protea','nightqueen','strelitzia','gentian','snowlotus','victoria','lycoris','bluerose','crownimperial'];
+  const list=SHOW.filter(sp=>{
+    if(tab==='all')return true;
+    const tr=SP_RARITY[sp]||'common';
+    if(tab==='free')return tr==='common'||tr==='uncommon';
+    return tr===tab;
+  });
+  return (
+    <section className="sec" id="flowers">
+      <div className="wrap">
+        <div className="sec-head center">
+          <div className="eyebrow">{t('codex_eyebrow')}</div>
+          <h2 className="serif-xl">{t('codex_title')}</h2>
+          <p className="lead">{t('codex_lead')}</p>
+        </div>
+        <div className="codex-tabs">
+          {TABS.map(([k,lbl])=>(
+            <button key={k} className={'codex-tab'+(tab===k?' on':'')} onClick={()=>setTab(k)}>{t(lbl)}</button>
+          ))}
+        </div>
+        <div className="codex-grid">
+          {list.map(sp=><CodexCard key={sp} sp={sp} lang={lang}/>)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- 共享花园 ---------- */
+const BOARD=[
+  {n:'林一',hrs:47},{n:'Mira',hrs:38},{n:'阿远',hrs:29},{n:'Yuki',hrs:12},{n:'你',hrs:6},
+];
+function Together({t,lang}){
+  const total=BOARD.reduce((a,b)=>a+b.hrs,0);
+  const pct=Math.min(100,Math.round(total/150*100));
+  return (
+    <section className="sec" id="together">
+      <div className="wrap">
+        <div className="together">
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:48,alignItems:'center'}} className="together-inner">
+            <div>
+              <div className="eyebrow">{t('tog_eyebrow')}</div>
+              <h2 style={{whiteSpace:'pre-line'}}>{t('tog_title')}</h2>
+              <p>{t('tog_lead')}</p>
+              <div className="together-goal">
+                <div style={{display:'flex',justifyContent:'space-between',font:'600 13px var(--sans)',color:'#CBD9C8'}}>
+                  <span>{t('tog_goal')}</span><span className="num">{total} / 150 h</span>
+                </div>
+                <div className="goal-bar"><div className="goal-fill" style={{width:pct+'%'}}/></div>
+                <div style={{marginTop:14,display:'flex',alignItems:'center',gap:10}}>
+                  <Bloom species="lycoris" seed={3} min={120} hour={22} size={54}/>
+                  <span style={{font:'400 13px var(--news)',fontStyle:'italic',color:'rgba(230,237,231,.7)'}}>
+                    {lang==='zh'?'满 150 小时，彼岸花为每人绽放':'At 150 h, a Red Spider Lily blooms for all'}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:12}}>
+                <span className="eyebrow" style={{color:'#9DBFA6'}}>{lang==='zh'?'本周排行':'This week'}</span>
+                <span style={{font:'500 12px var(--sans)',color:'rgba(230,237,231,.5)'}}>{t('tog_members')}</span>
+              </div>
+              <div className="board">
+                {BOARD.map((m,i)=>(
+                  <div key={i} className="board-row" style={m.n==='你'||m.n==='You'?{borderColor:'rgba(157,191,166,.4)',background:'rgba(157,191,166,.1)'}:null}>
+                    <span className="board-rank">{i+1}</span>
+                    <span className="board-name">{m.n==='你'&&lang==='en'?'You':m.n}</span>
+                    <span className="board-hrs num">{m.hrs} h</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+/* ---------- 里程碑 ---------- */
+const MILES=[
+  {icf:'dahlia',ih:13,t:['稀有发现','Rare find'],d:['用 45 分钟专注养成一朵稀有花','Grow a rare bloom from a 45-min session'],reward:null},
+  {icf:'marigold',ih:9,t:['连续一周','Week-long streak'],d:['连续 7 天专注','Focus 7 days in a row'],reward:null},
+  {icf:'sunflower',ih:13,t:['百小时专注','Century of focus'],d:['累计专注 100 小时','Reach 100 hours focused'],reward:'protea'},
+  {icf:'lavender',ih:19,t:['坚守一月','Month of devotion'],d:['连续 30 天专注','Focus 30 days in a row'],reward:'aurora'},
+  {icf:'lotus',ih:13,t:['社交之根','Social roots'],d:['和小队共享满 150 小时专注','Reach 150 shared hours with your team'],reward:'lycoris'},
+  {icf:'moonflower',ih:22,t:['夜的女王','Night’s queen'],d:['在深夜完成一段长专注','Finish a long late-night session'],reward:'nightqueen'},
+];
+function Milestones({t,lang}){
+  return (
+    <section className="sec" id="milestones">
+      <div className="wrap">
+        <div className="sec-head center">
+          <div className="eyebrow">{t('mile_eyebrow')}</div>
+          <h2 className="serif-xl">{t('mile_title')}</h2>
+          <p className="lead">{t('mile_lead')}</p>
+        </div>
+        <div className="mile-grid">
+          {MILES.map((m,i)=>(
+            <div key={i} className="mile-card">
+              <div className="mile-ic" dangerouslySetInnerHTML={{__html:flowerSVG(dna({species:m.icf,seed:speciesSeed(m.icf)%97,min:110,hour:m.ih,streak:6,task:''}),{size:40})}}/>
+              <div style={{flex:1}}>
+                <h4>{m.t[lang==='zh'?0:1]}</h4>
+                <p>{m.d[lang==='zh'?0:1]}</p>
+                {m.reward&&<div className="mile-reward"><span style={{display:'inline-flex'}} dangerouslySetInnerHTML={{__html:flowerSVG(dna({species:m.reward,seed:speciesSeed(m.reward)%97,min:110,hour:m.reward==='nightqueen'||m.reward==='lycoris'?22:13,streak:3,task:''}),{size:22})}}/>{t('mile_reward')} · {SP_LABEL[m.reward]}</div>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- CTA + 邮箱订阅 ---------- */
+function CTA({t}){
+  const [email,setEmail]=useState('');const [done,setDone]=useState(false);
+  const submit=e=>{e.preventDefault();if(/.+@.+\..+/.test(email))setDone(true);};
+  return (
+    <section className="cta" id="get">
+      <div className="wrap">
+        <div style={{display:'flex',justifyContent:'center',marginBottom:30}}>
+          <Bloom species="aurora" seed={7} min={120} hour={17} size={130} sway/>
+        </div>
+        <h2 style={{whiteSpace:'pre-line'}}>{t('cta_title')}</h2>
+        <p className="lead">{t('cta_lead')}</p>
+        {done
+          ? <div className="sub-ok"><Ic n="check" s={17}/> {t('cta_ok')}</div>
+          : <form className="sub-form" onSubmit={submit}>
+              <input type="email" required placeholder={t('cta_ph')} value={email} onChange={e=>setEmail(e.target.value)}/>
+              <button type="submit" className="btn btn-accent">{t('cta_btn')}<Ic n="arrow" s={16}/></button>
+            </form>}
+        <div className="store-badges">
+          <div className="store-badge soon">
+            <Ic n="seed" s={22}/>
+            <div><div className="sb-sub">{t('soon_sub')}</div><div className="sb-main">{t('soon_main')}</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- 页脚 ---------- */
+function Footer({t,lang}){
+  return (
+    <footer>
+      <div className="wrap">
+        <div className="foot-grid">
+          <div className="foot-brand">
+            <div className="brand" style={{font:'500 22px var(--serif)'}}>
+              <span className="brand-mark" dangerouslySetInnerHTML={{__html:flowerSVG(dna({species:'poppy',seed:4,min:80,hour:11,streak:1,task:''}),{size:30})}}/>
+              Bloom
+            </div>
+            <p>「{t('foot_tag')}」</p>
+          </div>
+          <div className="foot-cols">
+            <div className="foot-col">
+              <h5>{t('foot_product')}</h5>
+              <a href="#tour">{t('nav_tour')}</a>
+              <a href="#mechanic">{t('nav_mechanic')}</a>
+              <a href="#flowers">{t('nav_flowers')}</a>
+              <a href="#together">{t('nav_together')}</a>
+            </div>
+            <div className="foot-col">
+              <h5>{t('foot_company')}</h5>
+              <a href="#get">{t('foot_about')}</a>
+              <a href="#get">{t('foot_contact')}</a>
+            </div>
+            <div className="foot-col">
+              <h5>{t('foot_legal')}</h5>
+              <a href="#get">{t('foot_privacy')}</a>
+              <a href="#get">{t('foot_terms')}</a>
+            </div>
+          </div>
+        </div>
+        <div className="foot-bottom">
+          <span>© 2026 Bloom · {t('foot_rights')}</span>
+          <span>{t('foot_note')}</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ---------- 滚动揭示 ---------- */
+function useReveal(){
+  useEffect(()=>{
+    const els=document.querySelectorAll('.reveal');
+    const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:0.12});
+    els.forEach(el=>io.observe(el));
+    return()=>io.disconnect();
+  },[]);
+}
+
+/* ---------- 根组件 ---------- */
+function App(){
+  const {lang,setLang,t}=useLang();
+  useReveal();
+  return (
+    <React.Fragment>
+      <Nav t={t} lang={lang} setLang={setLang}/>
+      <Hero t={t}/>
+      <div className="reveal"><Tour t={t} lang={lang}/></div>
+      <Mechanic t={t}/>
+      <div className="reveal"><Intent t={t} lang={lang}/></div>
+      <div className="reveal"><Garden t={t}/></div>
+      <div className="reveal"><Codex t={t} lang={lang}/></div>
+      <div className="reveal"><Together t={t} lang={lang}/></div>
+      <div className="reveal"><Milestones t={t} lang={lang}/></div>
+      <div className="reveal"><CTA t={t}/></div>
+      <Footer t={t} lang={lang}/>
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
