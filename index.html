@@ -2024,8 +2024,8 @@ function Footer({t,lang}){
             </div>
             <div className="foot-col">
               <h5>{t('foot_legal')}</h5>
-              <a href="#get">{t('foot_privacy')}</a>
-              <a href="#get">{t('foot_terms')}</a>
+              <a href={lang==='zh'?'privacy/privacy-policy-zh.html':'privacy/privacy-policy-en.html'} target="_blank" rel="noopener">{t('foot_privacy')}</a>
+              <a href={lang==='zh'?'privacy/terms-of-service-zh.html':'privacy/terms-of-service-en.html'} target="_blank" rel="noopener">{t('foot_terms')}</a>
             </div>
           </div>
         </div>
