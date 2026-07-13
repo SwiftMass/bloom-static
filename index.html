@@ -78,6 +78,14 @@ section{position:relative}
 .btn-accent:hover{background:var(--accent-2);transform:translateY(-1px);box-shadow:0 10px 24px -10px rgba(168,78,48,.6)}
 .btn-ghost{background:none;color:var(--ink);border:1px solid var(--line-2)}
 .btn-ghost:hover{border-color:var(--ink-3)}
+/* app-store download badges */
+.dl-badge{display:inline-flex;align-items:center;gap:11px;padding:10px 18px;border-radius:14px;background:#1A1712;color:#fff;text-decoration:none;transition:.2s var(--ease);border:1px solid transparent}
+.dl-badge:hover{transform:translateY(-2px);box-shadow:0 12px 26px -12px rgba(26,23,18,.6);background:#000}
+.dl-badge .dl-logo{display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dl-badge.apple .dl-logo{color:#fff}
+.dl-badge .dl-txt{display:flex;flex-direction:column;line-height:1.1;text-align:left}
+.dl-badge .dl-txt em{font:400 10px var(--sans);font-style:normal;letter-spacing:.02em;opacity:.85;text-transform:uppercase}
+.dl-badge .dl-txt b{font:600 17px var(--sans);letter-spacing:-.2px;margin-top:1px}
 .btn-sm{padding:9px 16px;font-size:13px}
 .nav-menu-btn{display:none;flex-direction:column;justify-content:center;gap:5px;width:38px;height:38px;border:1px solid var(--line-2);border-radius:11px;background:none;cursor:pointer;padding:0 9px}
 .nav-menu-btn span{display:block;height:2px;width:100%;background:var(--ink);border-radius:2px;transition:transform .28s var(--ease),opacity .2s var(--ease)}
@@ -306,11 +314,25 @@ section{position:relative}
 .sub-form input{flex:1;min-width:220px;font:400 15px var(--sans);padding:14px 18px;border-radius:26px;border:1px solid var(--line-2);background:var(--card);color:var(--ink);outline:none;transition:border-color .2s}
 .sub-form input:focus{border-color:var(--accent)}
 .sub-ok{font:500 15px var(--sans);color:var(--m-sage);margin-top:6px}
+.cta-badges{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.cta-free{font:400 13px var(--sans);color:var(--ink-3);margin-top:22px;display:inline-flex;align-items:center;gap:7px;justify-content:center}
 .store-badges{display:flex;gap:14px;justify-content:center;margin-top:30px;flex-wrap:wrap}
 .store-badge{display:flex;align-items:center;gap:11px;background:var(--ink);color:var(--paper);border-radius:14px;padding:11px 18px;opacity:.9}
 .store-badge .sb-sub{font:400 10px var(--sans);opacity:.7;letter-spacing:.02em}
 .store-badge .sb-main{font:600 15px var(--sans);letter-spacing:.01em}
 .store-badge.soon{background:var(--paper-2);color:var(--ink-3);cursor:default}
+
+/* ---- support ---- */
+.support{padding:96px 0;background:var(--paper-2);border-top:1px solid var(--line)}
+.sup-wrap{text-align:center;max-width:600px}
+.sup-eyebrow{font:600 12px var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+.support h2{font:400 clamp(28px,4.4vw,48px) var(--serif);line-height:1.08;letter-spacing:-.8px;margin-bottom:18px;white-space:pre-line}
+.support .lead{max-width:480px;margin:0 auto 30px}
+.sup-mail{display:inline-flex;align-items:center;gap:10px;font:600 clamp(16px,2.4vw,20px) var(--sans);color:var(--ink);text-decoration:none;padding:13px 24px;border-radius:16px;background:var(--card);border:1px solid var(--line-2);transition:.2s var(--ease)}
+.sup-mail:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
+.sup-mail .ic{color:var(--accent);flex-shrink:0}
+.sup-btnrow{display:flex;justify-content:center;margin-top:22px}
+.sup-hours{font:400 13px var(--sans);color:var(--ink-3);margin-top:22px}
 
 /* ---- footer ---- */
 footer{border-top:1px solid var(--line);padding:56px 0 40px;background:var(--paper)}
@@ -321,7 +343,12 @@ footer{border-top:1px solid var(--line);padding:56px 0 40px;background:var(--pap
 .foot-col h5{font:600 11px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
 .foot-col a{display:block;font:400 14px var(--sans);color:var(--ink-2);margin-bottom:10px;transition:color .18s}
 .foot-col a:hover{color:var(--ink)}
-.foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid var(--line);font:400 13px var(--sans);color:var(--ink-3);flex-wrap:wrap;gap:12px}
+.foot-company{padding-top:24px;border-top:1px solid var(--line)}
+.foot-company .fc-name{font:600 13px var(--sans);color:var(--ink-2);margin-bottom:8px}
+.foot-company .fc-lines{display:flex;flex-direction:column;gap:5px;font:400 12.5px var(--sans);color:var(--ink-3);line-height:1.5}
+.foot-company .fc-lines a{color:var(--ink-3);transition:color .18s}
+.foot-company .fc-lines a:hover{color:var(--ink)}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:20px;margin-top:24px;border-top:1px solid var(--line);font:400 13px var(--sans);color:var(--ink-3);flex-wrap:wrap;gap:12px}
 
 /* ---- reveal anim ---- */
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
@@ -1166,7 +1193,9 @@ const I18N={
   hero_title:['把专注，\n种成一座花园','Grow a garden\nfrom your focus'],
   hero_lead:['设定一段专注，选一个意图，一朵花便开始生长。留到最后，它永远绽放；中途离开，它就此枯萎。每一次专注，都长出一朵永不重现的花。','Set a focus session, choose an intention, and a flower begins to grow. Stay to the end and it blooms forever; leave early and it withers. Every session grows one flower that will never exist again.'],
   hero_cta1:['获取 App','Get the app'],hero_cta2:['看看玩法','See how it works'],
-  hero_note:['iOS 版即将上架 · 现在订阅抢先体验','Coming soon on iOS · Subscribe for early access'],
+  hero_note:['iOS 与 Android 现已上线 · 免费下载','Now on iOS & Android · Free to download'],
+  store_apple_pre:['下载于','Download on the'],store_apple:['App Store','App Store'],
+  store_google_pre:['前往','GET IT ON'],store_google:['Google Play','Google Play'],
   hero_caption:['你给的每一分钟，我都记得。','I remember every minute you gave me.'],
 
   tour_eyebrow:['一款 App，六种打开方式','ONE APP · SIX WAYS IN'],
@@ -1228,17 +1257,22 @@ const I18N={
   mile_reward:['解锁','Unlocks'],
 
   cta_title:['让今天的专注，\n开成一朵花','Let today’s focus\nbloom into a flower'],
-  cta_lead:['Bloom 正在打磨 iOS 版本。留下邮箱，上架第一时间通知你，并送上抢先体验。','Bloom is polishing its iOS release. Leave your email and we’ll tell you the moment it lands — with early access.'],
-  cta_ph:['你的邮箱','Your email'],cta_btn:['通知我','Notify me'],
-  cta_ok:['已收到 — 花开时我们会来敲门。','Got it — we’ll knock when it blooms.'],
+  cta_lead:['Bloom 现已登陆 iOS 与 Android，免费下载。种下第一次专注，看它开成一朵花。','Bloom is now on iOS and Android, free to download. Plant your first focus session and watch it bloom.'],
+  cta_free:['免费下载 · 无需注册即可开始','Free to download · Start without an account'],
   soon_main:['即将上架','Coming soon'],soon_sub:['App Store · iOS','App Store · iOS'],
 
   foot_tag:['一座由专注长成的花园。','A garden grown from focus.'],
   foot_product:['产品','Product'],foot_company:['关于','Company'],foot_legal:['条款','Legal'],
   foot_privacy:['隐私政策','Privacy'],foot_terms:['服务条款','Terms'],
   foot_contact:['联系我们','Contact'],foot_about:['关于 Bloom','About Bloom'],
+  foot_support:['技术支持','Support'],
   foot_rights:['保留所有权利。','All rights reserved.'],
   foot_note:['Bloom 尚未上架，页面内容为产品预览。','Bloom is not yet released; this page is a product preview.'],
+  sup_eyebrow:['技术支持','Support'],
+  sup_title:['需要帮助？\n我们随时在。','Need a hand?\nWe’re here to help.'],
+  sup_lead:['遇到问题、有功能建议，或想反馈使用体验——直接给我们写封邮件，我们会尽快回复。','Questions, bug reports, or ideas for Bloom — send us an email and we’ll get back to you as soon as we can.'],
+  sup_btn:['邮件联系我们','Email support'],
+  sup_hours:['我们通常在 1–2 个工作日内回复。','We usually reply within 1–2 business days.'],
 };
 /* ---------- 语言 hook ---------- */
 function useLang(){
@@ -1259,6 +1293,7 @@ function Ic({n,s=20}){
     together:'M9 11a3 3 0 100-6 3 3 0 000 6z M3 20a6 6 0 0112 0 M17 11a3 3 0 100-6 M15 20a6 6 0 016 0',
     arrow:'M5 12h14 M13 6l6 6-6 6',
     check:'M5 12l5 5 9-11',
+    mail:'M4 6h16v12H4z M4 7l8 6 8-6',
     dieflower:'M8 4.5h8a3.5 3.5 0 013.5 3.5v8a3.5 3.5 0 01-3.5 3.5h-8a3.5 3.5 0 01-3.5-3.5v-8a3.5 3.5 0 013.5-3.5z M12 10.7C10.6 9.7 10.6 7.7 12 7C13.4 7.7 13.4 9.7 12 10.7Z M12 13.3C10.6 14.3 10.6 16.3 12 17C13.4 16.3 13.4 14.3 12 13.3Z M10.7 12C9.7 10.6 7.7 10.6 7 12C7.7 13.4 9.7 13.4 10.7 12Z M13.3 12C14.3 10.6 16.3 10.6 17 12C16.3 13.4 14.3 13.4 13.3 12Z',
     breath:'M12 21a9 9 0 100-18 9 9 0 000 18z M8 12c1.5-2 6.5-2 8 0 M8 12c1.5 2 6.5 2 8 0',
     moon:'M20 14.5A8 8 0 019.5 4 7 7 0 1020 14.5z',
@@ -1268,6 +1303,22 @@ function Ic({n,s=20}){
     globe:'M12 21a9 9 0 100-18 9 9 0 000 18z M3 12h18 M12 3c2.5 2.7 2.5 15.3 0 18 M12 3c-2.5 2.7-2.5 15.3 0 18',
   };
   return <svg className="ic" viewBox="0 0 24 24" width={s} height={s} stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">{P[n].split(' M').map((seg,i)=><path key={i} d={(i?'M':'')+seg}/>)}</svg>;
+}
+
+/* ---------- 应用商店下载徽章 ---------- */
+// 真实上架后把 href 换成对应的 App Store / Google Play 链接
+const STORE_URL={apple:'https://www.apple.com/app-store/',google:'https://play.google.com/store'};
+const STORE_LOGO={
+  apple:<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true"><path d="M17.05 12.54c-.02-2.02 1.65-2.99 1.72-3.04-.94-1.37-2.4-1.56-2.92-1.58-1.24-.13-2.42.73-3.05.73-.63 0-1.6-.71-2.63-.69-1.35.02-2.6.79-3.29 2-1.4 2.43-.36 6.02 1 8 .67.97 1.46 2.06 2.5 2.02 1-.04 1.38-.65 2.59-.65 1.21 0 1.55.65 2.61.63 1.08-.02 1.76-.99 2.42-1.96.76-1.12 1.07-2.21 1.09-2.27-.02-.01-2.09-.8-2.11-3.18zM15.1 6.34c.55-.67.92-1.6.82-2.53-.79.03-1.75.53-2.32 1.19-.51.59-.96 1.54-.84 2.44.88.07 1.79-.45 2.34-1.1z"/></svg>,
+  google:<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3.6 2.4c-.24.25-.38.64-.38 1.14v16.92c0 .5.14.89.38 1.14l.06.05L13.1 12.3v-.2L3.66 2.35l-.06.05z" fill="#00D0FF"/><path d="M16.24 15.44l-3.14-3.14v-.2l3.14-3.14.07.04 3.72 2.11c1.06.6 1.06 1.59 0 2.2l-3.72 2.11-.07.02z" fill="#FFD400"/><path d="M16.31 15.4l-3.21-3.21L3.6 21.6c.35.37.93.42 1.58.05l11.13-6.25z" fill="#FF3C4B"/><path d="M16.31 8.96L5.18 2.71C4.53 2.34 3.95 2.39 3.6 2.76l9.5 9.43 3.21-3.23z" fill="#00F076"/></svg>,
+};
+function StoreBadge({store,t}){
+  return (
+    <a href={STORE_URL[store]} target="_blank" rel="noopener" className={'dl-badge '+store}>
+      <span className="dl-logo">{STORE_LOGO[store]}</span>
+      <span className="dl-txt"><em>{t(store==='apple'?'store_apple_pre':'store_google_pre')}</em><b>{t(store==='apple'?'store_apple':'store_google')}</b></span>
+    </a>
+  );
 }
 
 /* ---------- 花盆 Pot（移植原型：锥形盆身 + 盆沿 + 土口） ---------- */
@@ -1390,8 +1441,8 @@ function Hero({t}){
           <h1 className="serif-hero" style={{whiteSpace:'pre-line'}}>{t('hero_title')}</h1>
           <p className="lead">{t('hero_lead')}</p>
           <div className="hero-cta">
-            <a href="#get" className="btn btn-accent">{t('hero_cta1')}<Ic n="arrow" s={17}/></a>
-            <a href="#mechanic" className="btn btn-ghost">{t('hero_cta2')}</a>
+            <StoreBadge store="apple" t={t}/>
+            <StoreBadge store="google" t={t}/>
           </div>
           <div className="hero-note"><Ic n="seed" s={15}/>{t('hero_note')}</div>
         </div>
@@ -1521,7 +1572,7 @@ function TourDial({cfg,mode,L,dialP}){
   const frac=(val-cfg.minV)/(cfg.maxV-cfg.minV);
   const R=132,C=2*Math.PI*R,knobA=frac*360*Math.PI/180,kx=160+R*Math.cos(knobA),ky=160+R*Math.sin(knobA);
   const grow=bouquetGrow(mode==='focus'?val:val*5);   // preview openness scales with the dial (like the app)
-  const flower=useMemo(()=><Bloom species={cfg.sp} seed={cfg.seed} min={mode==='focus'?val*4:80} hour={cfg.hour} size={116} grow={grow}/>,[mode,grow,cfg.sp]);
+  const flower=useMemo(()=><Bloom species={cfg.sp} seed={cfg.seed} min={mode==='focus'?val*4:80} hour={cfg.hour} size={84} grow={grow}/>,[mode,grow,cfg.sp]);
   return (
     <React.Fragment>
       <div className="tdemo-head">
@@ -1572,7 +1623,7 @@ function TourSleep({cfg,L,dialP}){
   const [bx,by]=polar(bedM),[wx,wy]=polar(wakeM),large=dur>720?1:0;
   const health=(h>=7&&h<=9)?1:Math.max(0.1,1-Math.abs(h-8)*0.2);
   const grow=0.5+0.5*health;
-  const flower=useMemo(()=><Bloom species="moonflower" seed={cfg.seed} min={dur} hour={23} size={104} grow={grow}/>,[grow,cfg.seed]);
+  const flower=useMemo(()=><Bloom species="moonflower" seed={cfg.seed} min={dur} hour={23} size={78} grow={grow}/>,[grow,cfg.seed]);
   const toT=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
   const zone=h<7?L(['偏短','short']):h>9?L(['偏长','long']):L(['理想区间','ideal']);
   const zoneCol=(h>=7&&h<=9)?'#A6E0C8':'#E0C8A6';
@@ -1652,7 +1703,7 @@ function TourRun({cfg,mode,L,ph}){
 /* bloom result — the light celebration screen: full flower, rarity eyebrow, stat strip. Mirrors ResultScreen. */
 function TourBloom({cfg,mode,L,ph}){
   const pop=easeOut(Math.min(1,ph/0.4));       // the "grow-in" pop of the finished bloom
-  const flower=useMemo(()=><Bloom species={cfg.sp} seed={cfg.seed} min={mode==='focus'?100:80} hour={cfg.hour} size={168} grow={1}/>,[mode,cfg.sp]);
+  const flower=useMemo(()=><Bloom species={cfg.sp} seed={cfg.seed} min={mode==='focus'?100:80} hour={cfg.hour} size={90} grow={1}/>,[mode,cfg.sp]);
   const stats=[
     [L(cfg.statDur),L(cfg.statVerb)],
     [cfg.coin,L(['金币','coins'])],
@@ -1884,7 +1935,7 @@ function Codex({t,lang}){
 
 /* ---------- 共享花园 ---------- */
 const BOARD=[
-  {n:'林一',hrs:47},{n:'Mira',hrs:38},{n:'阿远',hrs:29},{n:'Yuki',hrs:12},{n:'你',hrs:6},
+  {n:'Leo',hrs:47},{n:'Mira',hrs:38},{n:'Noah',hrs:29},{n:'Yuki',hrs:12},{n:'你',hrs:6},
 ];
 function Together({t,lang}){
   const total=BOARD.reduce((a,b)=>a+b.hrs,0);
@@ -1933,13 +1984,24 @@ function Together({t,lang}){
   );
 }
 /* ---------- 里程碑 ---------- */
+// 与 App 内成就清单一致（bloom-garden-pro 源文件 MILESTONES，共 16 项）
 const MILES=[
+  {icf:'poppy',ih:11,t:['初次绽放','First bloom'],d:['种下你的第一朵花','Plant your very first flower'],reward:null},
   {icf:'dahlia',ih:13,t:['稀有发现','Rare find'],d:['用 45 分钟专注养成一朵稀有花','Grow a rare bloom from a 45-min session'],reward:null},
-  {icf:'marigold',ih:9,t:['连续一周','Week-long streak'],d:['连续 7 天专注','Focus 7 days in a row'],reward:null},
-  {icf:'sunflower',ih:13,t:['百小时专注','Century of focus'],d:['累计专注 100 小时','Reach 100 hours focused'],reward:'protea'},
-  {icf:'lavender',ih:19,t:['坚守一月','Month of devotion'],d:['连续 30 天专注','Focus 30 days in a row'],reward:'aurora'},
-  {icf:'lotus',ih:13,t:['社交之根','Social roots'],d:['和小队共享满 150 小时专注','Reach 150 shared hours with your team'],reward:'lycoris'},
-  {icf:'moonflower',ih:22,t:['夜的女王','Night’s queen'],d:['在深夜完成一段长专注','Finish a long late-night session'],reward:'nightqueen'},
+  {icf:'marigold',ih:8,t:['早起者','Early riser'],d:['让 10 朵花在早 9 点前开放','Open 10 flowers before 9am'],reward:null},
+  {icf:'lotus',ih:13,t:['25 朵花园','Garden of 25'],d:['养成 25 朵花','Bloom 25 flowers in your garden'],reward:null},
+  {icf:'sunflower',ih:13,t:['连续一周','Week-long streak'],d:['连续 7 天专注','Focus 7 days in a row'],reward:null},
+  {icf:'moonflower',ih:22,t:['夜间园丁','Night gardener'],d:['晚 9 点后养成 20 朵花','Bloom 20 flowers after 9pm'],reward:'strelitzia'},
+  {icf:'camellia',ih:13,t:['社交之根','Social roots'],d:['和小队一起共享满 150 小时专注','Reach 150 shared hours with your team'],reward:'lycoris'},
+  {icf:'lavender',ih:15,t:['静心','Calm mind'],d:['完成 15 次正念练习','Finish 15 mindful sessions'],reward:'gentian'},
+  {icf:'iris',ih:22,t:['好好休息','Well rested'],d:['保持 14 晚睡眠连续','Keep a 14-night sleep streak'],reward:'snowlotus'},
+  {icf:'moon_silver',ih:22,t:['月圆三十','Thirty moons'],d:['保持 30 晚睡眠连续','Keep a 30-night sleep streak'],reward:'moon_blood'},
+  {icf:'hibiscus',ih:15,t:['坚守一月','Month of devotion'],d:['连续 30 天专注','Focus 30 days in a row'],reward:'aurora'},
+  {icf:'peony',ih:13,t:['百小时专注','Century of focus'],d:['累计专注 100 小时','Reach 100 hours focused'],reward:'protea'},
+  {icf:'anemone',ih:13,t:['场景收藏家','Scene collector'],d:['解锁全部花园背景','Unlock every garden backdrop'],reward:'victoria'},
+  {icf:'rose',ih:13,t:['传说培育者','Legendary grower'],d:['养成一朵传说级稀有花','Grow a legendary-rarity bloom'],reward:'nightqueen'},
+  {icf:'orchid',ih:13,t:['金币收藏家','Coin collector'],d:['用金币买下 15 朵花','Buy 15 blooms with coins'],reward:'bluerose'},
+  {icf:'firelily',ih:13,t:['挚友会员','Plus patron'],d:['订阅 Bloom Plus','Subscribe to Bloom Plus'],reward:'crownimperial'},
 ];
 function Milestones({t,lang}){
   return (
@@ -1967,10 +2029,8 @@ function Milestones({t,lang}){
   );
 }
 
-/* ---------- CTA + 邮箱订阅 ---------- */
+/* ---------- 结尾下载召唤 ---------- */
 function CTA({t}){
-  const [email,setEmail]=useState('');const [done,setDone]=useState(false);
-  const submit=e=>{e.preventDefault();if(/.+@.+\..+/.test(email))setDone(true);};
   return (
     <section className="cta" id="get">
       <div className="wrap">
@@ -1979,18 +2039,11 @@ function CTA({t}){
         </div>
         <h2 style={{whiteSpace:'pre-line'}}>{t('cta_title')}</h2>
         <p className="lead">{t('cta_lead')}</p>
-        {done
-          ? <div className="sub-ok"><Ic n="check" s={17}/> {t('cta_ok')}</div>
-          : <form className="sub-form" onSubmit={submit}>
-              <input type="email" required placeholder={t('cta_ph')} value={email} onChange={e=>setEmail(e.target.value)}/>
-              <button type="submit" className="btn btn-accent">{t('cta_btn')}<Ic n="arrow" s={16}/></button>
-            </form>}
-        <div className="store-badges">
-          <div className="store-badge soon">
-            <Ic n="seed" s={22}/>
-            <div><div className="sb-sub">{t('soon_sub')}</div><div className="sb-main">{t('soon_main')}</div></div>
-          </div>
+        <div className="cta-badges">
+          <StoreBadge store="apple" t={t}/>
+          <StoreBadge store="google" t={t}/>
         </div>
+        <p className="cta-free"><Ic n="seed" s={15}/>{t('cta_free')}</p>
       </div>
     </section>
   );
@@ -2020,21 +2073,50 @@ function Footer({t,lang}){
             <div className="foot-col">
               <h5>{t('foot_company')}</h5>
               <a href="#get">{t('foot_about')}</a>
-              <a href="#get">{t('foot_contact')}</a>
+              <a href="#support">{t('foot_support')}</a>
+              <a href={'mailto:'+SUPPORT_EMAIL}>{t('foot_contact')}</a>
             </div>
             <div className="foot-col">
               <h5>{t('foot_legal')}</h5>
-              <a href={lang==='zh'?'privacy/privacy-policy-zh.html':'privacy/privacy-policy-en.html'} target="_blank" rel="noopener">{t('foot_privacy')}</a>
-              <a href={lang==='zh'?'privacy/terms-of-service-zh.html':'privacy/terms-of-service-en.html'} target="_blank" rel="noopener">{t('foot_terms')}</a>
+              <a href="https://swiftmass.github.io/bloom-static/privacy/privacy-policy-en.html" target="_blank" rel="noopener">{t('foot_privacy')}</a>
+              <a href="https://swiftmass.github.io/bloom-static/privacy/terms-of-service-en.html" target="_blank" rel="noopener">{t('foot_terms')}</a>
             </div>
           </div>
         </div>
+        <div className="foot-company">
+          <div className="fc-name">SwiftPass Technologies Co., Ltd.</div>
+          <div className="fc-lines">
+            <span>Address: 54F, Tower T1, Shenzhen Bay Innovation &amp; Technology Center, Yuehai Sub-district, Nanshan District, Shenzhen, China</span>
+            <span>Email: <a href={'mailto:'+SUPPORT_EMAIL}>{SUPPORT_EMAIL}</a></span>
+          </div>
+        </div>
         <div className="foot-bottom">
-          <span>© 2026 Bloom · {t('foot_rights')}</span>
-          <span>{t('foot_note')}</span>
+          <span>© 2026 SwiftPass Technologies Co., Ltd. All rights reserved.</span>
         </div>
       </div>
     </footer>
+  );
+}
+
+/* ---------- 技术支持 ---------- */
+// App Store 审核会打开官网寻找支持联系方式，这一段让联系邮箱清晰可见、可直接点击
+const SUPPORT_EMAIL='danyang.zhao@swiftpass.cn';
+function Support({t}){
+  return (
+    <section className="support" id="support">
+      <div className="wrap sup-wrap">
+        <div className="sup-eyebrow">{t('sup_eyebrow')}</div>
+        <h2 style={{whiteSpace:'pre-line'}}>{t('sup_title')}</h2>
+        <p className="lead">{t('sup_lead')}</p>
+        <a className="sup-mail" href={'mailto:'+SUPPORT_EMAIL}>
+          <Ic n="mail" s={18}/><span>{SUPPORT_EMAIL}</span>
+        </a>
+        <div className="sup-btnrow">
+          <a className="btn btn-accent" href={'mailto:'+SUPPORT_EMAIL}><Ic n="mail" s={16}/>{t('sup_btn')}</a>
+        </div>
+        <p className="sup-hours">{t('sup_hours')}</p>
+      </div>
+    </section>
   );
 }
 
@@ -2064,6 +2146,7 @@ function App(){
       <div className="reveal"><Together t={t} lang={lang}/></div>
       <div className="reveal"><Milestones t={t} lang={lang}/></div>
       <div className="reveal"><CTA t={t}/></div>
+      <div className="reveal"><Support t={t}/></div>
       <Footer t={t} lang={lang}/>
     </React.Fragment>
   );
